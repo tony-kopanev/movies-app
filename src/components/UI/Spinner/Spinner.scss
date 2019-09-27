@@ -1,0 +1,17 @@
+.Spinner{
+  width: 80px;
+  height: 80px;
+  border: 4px solid rgba(#26ff00, .6);
+  border-left-color: #26ff00;
+  border-radius: 50%;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: spin 1000ms linear infinite forwards;
+}
+
+@keyframes spin {
+  from { transform: rotate(0) }
+  to { transform: rotate(360deg) }
+}

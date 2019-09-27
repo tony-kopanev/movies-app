@@ -1,0 +1,12 @@
+.Button{
+  border: 2px solid #fff;
+  padding: 5px 25px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: transparent;
+  cursor: pointer;
+  transition: border-radius 200ms ease;
+
+  &:hover { border-radius: 25px; }
+
+}
