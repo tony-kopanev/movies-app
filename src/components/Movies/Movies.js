@@ -21,6 +21,10 @@ const Movies = ({ moviesList, isFetching }) => {
   );
 };
 
+Movies.defaultProps = {
+  moviesList: null
+};
+
 Movies.propTypes = {
   moviesList: PropTypes.array,
   isFetching: PropTypes.bool.isRequired

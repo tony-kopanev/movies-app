@@ -6,15 +6,15 @@ import './Movie.scss';
 
 const Movie = ({ movieData }) => {
   const { backdrop_path, title, overview, poster_path } = movieData;
-  const baseUrl = 'https://image.tmdb.org/t/p/w500/'
-  console.log('[title]', title);
+  const baseUrl = 'https://image.tmdb.org/t/p/w500/';
+
   return (
     <div className="Movie" style = {{ backgroundImage: `url(${baseUrl+backdrop_path})` }}>
       <h1>{title}</h1>
   
       <div className="MovieContent">
         <div className="ImageWrapper">
-          <img src = {poster_path} alt={title} />
+          <img src = {baseUrl+poster_path} alt={title} />
         </div>
   
         <p>{overview}</p>
@@ -26,7 +26,13 @@ const Movie = ({ movieData }) => {
 }
 
 Movie.propTypes = {
-    
+  movieData:
+    PropTypes.oneOfType(
+      [
+        PropTypes.object.isRequired,
+        PropTypes.oneOf([null]).isRequired,
+      ]
+    ),
 };
 
 export default Movie;

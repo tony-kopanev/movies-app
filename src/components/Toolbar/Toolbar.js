@@ -13,7 +13,7 @@ const Toolbar = ({ search, changed, isFetching, clicked }) => (
         onChangeHandler = {changed}
       />
 
-      <Button clicked = {() => clicked('Housten width toolbar')}>
+      <Button clicked = {clicked}>
         { isFetching ? 'Serching...' : 'Search' }
       </Button>
   </div>
@@ -24,7 +24,6 @@ Toolbar.propTypes = {
     changed: PropTypes.func.isRequired,
     clicked: PropTypes.func.isRequired,
     isFetching: PropTypes.bool.isRequired,
-
 };
 
 export default Toolbar;

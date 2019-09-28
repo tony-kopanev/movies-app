@@ -14,9 +14,7 @@ class App extends Component {
     // isOpen: false
   }
 
-  onChangeHandler = event => {
-    this.setState({ searchField: event.target.value })
-  };
+  onChangeHandler = event => this.setState({ searchField: event.target.value });
 
   fetchMoviesHandler = () => {
 
@@ -31,21 +29,6 @@ class App extends Component {
     this.setState((prevState, prevProps) => ({
         isFetching: !prevState.isFetching
     }));
-
-    const movies = [
-    {
-      id: 1,
-      name: 'a'
-    },
-    {
-      id: 2,
-      name: 'b'
-    },
-    {
-      id: 3,
-      name: 'c'
-    },
-  ];
 
     const baseURL = 'https://api.themoviedb.org/3/search/movie';
     const apiKey = '52eae72c07d6cd03afd7491a82451f7b';
@@ -64,15 +47,7 @@ class App extends Component {
       })))
       .catch(err => console.log('[err]', err));
 
-  // https://api.themoviedb.org/3/search/movie?api_key=52eae72c07d6cd03afd7491a82451f7b&language=en-US&query=Avengers&page=1&include_adult=false
-
-
-    // setTimeout(() => {
-    //   this.setState(prevState => ({
-    //     isFetching: !prevState.isFetching
-    //   }));
-    // }, 2000);
-
+    // https://api.themoviedb.org/3/search/movie?api_key=52eae72c07d6cd03afd7491a82451f7b&language=en-US&query=Avengers&page=1&include_adult=false
   };
 
   
