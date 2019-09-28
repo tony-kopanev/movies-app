@@ -5,7 +5,7 @@ import './Footer.scss';
 const Footer = () => {
     return (
         <div className="Footer">
-            FOOTER
+            <strong>All Rights Reserved { new Date().getFullYear() }</strong>
         </div>
     );
 };

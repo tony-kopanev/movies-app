@@ -7,6 +7,7 @@ import './Movie.scss';
 const Movie = ({ movieData }) => {
   const { backdrop_path, title, overview, poster_path } = movieData;
   const baseUrl = 'https://image.tmdb.org/t/p/w500/';
+  //const baseUrl = 'https://image.tmdb.org/t/p/original/';
 
   return (
     <div className="Movie" style = {{ backgroundImage: `url(${baseUrl+backdrop_path})` }}>
