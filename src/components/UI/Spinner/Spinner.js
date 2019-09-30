@@ -2,6 +2,12 @@ import React from 'react';
 
 import './Spinner.scss';
 
-const Spinner = () => <div className="Spinner" />;
+const Spinner = () => {
+
+  return (
+    <div className="Spinner"></div>
+  )
+};
+
 
 export default Spinner;

@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
-import Button from '../../UI/Button/Button';
+//import Button from '../../UI/Button/Button';
 import './Movie.scss';
 
 const Movie = ({ movieData }) => {
-  const { backdrop_path, title, overview, poster_path } = movieData;
+  const { id, backdrop_path, title, overview, poster_path } = movieData;
   const baseUrl = 'https://image.tmdb.org/t/p/w500/';
   //const baseUrl = 'https://image.tmdb.org/t/p/original/';
 
@@ -21,7 +22,8 @@ const Movie = ({ movieData }) => {
         <p>{overview}</p>
       </div>
   
-      <Button>READ MORE</Button>  
+      <Link to={'/' + id} className='LinkButton'>Read More</Link>
+      {/* <Button>READ MORE</Button> */}
     </div>
   );
 }
