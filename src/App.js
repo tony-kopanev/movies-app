@@ -1,14 +1,16 @@
-import React, {PureComponent} from 'react';
+import React, { PureComponent } from 'react';
 //import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
 
 import Toolbar from './components/Toolbar/Toolbar';
 import Movies from './components/Movies/Movies';
 import Footer from './components/Footer/Footer';
+import { connect } from 'react-redux';
+import { actionSayHello } from './store/movies/action';
 
+import AppContext from './context/appContext';
 import './App.scss';
 
-//class App extends Component {
-  // PureComponent содержит в себе логику, обновления state, в shouldComponentUpdate(), если state не отличается, то не вызывает обновления
+
 class App extends PureComponent {
   state = {
     searchField: '',
@@ -36,15 +38,20 @@ class App extends PureComponent {
     //console.log('[this.props]', this.props);
     //console.log('[App] %ccomponentDidMount', 'color: orange;');
 
+    this.props.updateSayHello(true);
+
     this.setState((prevState, prevProps) => ({
       isFetching: !prevState.isFetching
     }));
 
     const baseURL = 'https://api.themoviedb.org/3/search/movie';
     const apiKey = '52eae72c07d6cd03afd7491a82451f7b';
+    //const lang = 'ru-RU';
+    //const lang = 'uk-UA';
+    const lang = 'en-US';
 
     //fetch(`${baseURL}?api_key=${apiKey}&language=en-US&query=${this.state.searchField}&page=1&include_adult=false`)
-    fetch(`${baseURL}?api_key=${apiKey}&language=en-US&query=Black&page=1&include_adult=false`)
+    fetch(`${baseURL}?api_key=${apiKey}&language=${lang}&query=Black&page=1&include_adult=false`)
       .then(res => res.json())
       .then(movies => {
         this.setState({
@@ -116,16 +123,23 @@ class App extends PureComponent {
   
   render() {
     //console.log('[App] %crender', 'color: orange;');
+    console.log('[this.props.sayHello]', this.props.sayHello);
     const { searchField, isFetching, moviesList } = this.state;
     
     return (
       <div className="App">
-        <Toolbar 
-          search = {searchField}
-          isFetching = {isFetching} 
-          changed = {this.onChangeHandler}
-          clicked = {this.fetchMoviesHandler}
-        />
+        <AppContext.Provider value= {{
+          searchField,
+          moviesList,
+          isFetching
+        }} >
+          <Toolbar 
+            //search = {searchField}
+            isFetching = {isFetching} 
+            changed = {this.onChangeHandler}
+            clicked = {this.fetchMoviesHandler}
+          />
+        </AppContext.Provider>
 
         <Movies 
           moviesList = {moviesList}
@@ -152,6 +166,17 @@ class App extends PureComponent {
     );
   };
 }
+
+const mapStateToProps = state => {
+  return {
+    sayHello: state.movies.sayHello // this.props.sayHello
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    updateSayHello: sts => dispatch(actionSayHello(sts)),
+  };
+};
   
-export default App;
-//export default wrapper(withRouter(App));
+export default connect(mapStateToProps, mapDispatchToProps)(App);

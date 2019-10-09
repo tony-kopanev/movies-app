@@ -20,7 +20,7 @@ const Toolbar = ({ search, changed, isFetching, clicked }) => (
 );
 
 Toolbar.propTypes = {
-    search: PropTypes.string.isRequired,
+    //search: PropTypes.string.isRequired,
     changed: PropTypes.func.isRequired,
     clicked: PropTypes.func.isRequired,
     isFetching: PropTypes.bool.isRequired,
