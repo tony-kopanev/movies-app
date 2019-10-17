@@ -51,8 +51,9 @@ class Movies extends Component{
 
       return (
         <div className = 'Movies'>
-          { isFetching && <Spinner /> }
-          {movies}
+          {/* { isFetching && <Spinner /> } */}
+          {/* {movies} */}
+          { isFetching ? <Spinner /> : movies }
         </div>
       );
     }

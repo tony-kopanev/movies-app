@@ -1,0 +1,3 @@
+export const SAY_HELLO = 'SAY_HELLO';
+export const TOGGLE_LOADING = 'TOGGLE_LOADING';
+export const UPDATE_MOVIES = 'UPDATE_MOVIES';
