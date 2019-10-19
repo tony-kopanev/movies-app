@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import { Route, Switch } from 'react-router-dom'
 
 import Toolbar from './components/Toolbar/Toolbar';
 import Movies from './components/Movies/Movies';
 import Footer from './components/Footer/Footer';
 import { fetchMovies } from './store/actions/movieActions';
+import Auth from './components/Auth/Auth';
 
 import './App.scss';
 
@@ -12,6 +14,9 @@ import './App.scss';
 class App extends PureComponent {
   state = {
     searchField: '',
+    email: '',
+    password: '',
+    mode: 'signup'
   }
   
   componentDidMount() {
@@ -19,10 +24,23 @@ class App extends PureComponent {
     fetchMovies('Black');
   }
 
-  onChangeHandler = event => this.setState({ searchField: event.target.value });
+  onChangeHandler = event => {
+    console.log('[event.target.name]', event.target.name);
+    this.setState({ [event.target.name]: event.target.value });
+  }
   
+  onSubmitHandler = () => {
+    console.log('%c[SUBMITTED]', 'color: teel; font-style: italic;');
+  }
+
+  switchModeHandler = () => {
+    this.setState(prevState => ({
+      mode: prevState.mode === 'signup' ? 'signin' : 'signup'
+    }))
+  }
+
   render() {
-    const { searchField } = this.state;
+    const { searchField, email, password, mode } = this.state;
     const { isFetching, moviesList, fetchMovies } = this.props;
     
     return (
@@ -35,14 +53,26 @@ class App extends PureComponent {
           clicked = { () => fetchMovies(searchField) }
         />
 
-        <Movies 
+        {/* <Movies 
           moviesList = {moviesList}
           isFetching = {isFetching}
-        />
-         {/* <Switch>
-          <Route path='/movies' component = {Spinner} />
-          <Route path='/contacts' render = {() => <h2>Our Contacts</h2>} />
-          
+        /> */}
+
+         <Switch>
+          <Route 
+            path="/auth" 
+            render = { props => (
+              <Auth
+                {...props}
+                email = {email}
+                password = {password}
+                mode = {mode}
+                onChangeHandler = {this.onChangeHandler}
+                onSubmitHandler = {this.onSubmitHandler}
+                switchModeHandler = {this.switchModeHandler}
+              />
+          )} />
+
           <Route
             path='/' exact
             render = {props =>
@@ -53,8 +83,7 @@ class App extends PureComponent {
                 />
               )} 
           />
-          <Redirect to='/' />
-        </Switch> */}
+        </Switch>
          <Footer />
       </div>
     );
