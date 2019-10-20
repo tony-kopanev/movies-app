@@ -6,7 +6,12 @@
   background-color: transparent;
   cursor: pointer;
   transition: border-radius 200ms ease;
+  outline: none;
 
   &:hover { border-radius: 25px; }
 
+  &.Alternative {
+    border-color: orange;
+    color: orange;
+  }
 }

@@ -14,8 +14,16 @@ import './App.scss';
 class App extends PureComponent {
   state = {
     searchField: '',
-    email: '',
-    password: '',
+    email: {
+      value: '',
+      error: false,
+      message: 'The email address is incorrect.'
+    },
+    password: {
+      value: '',
+      error: false,
+      message: 'The password should be minimum 6 characters length.'
+    },
     mode: 'signup'
   }
   
@@ -25,19 +33,91 @@ class App extends PureComponent {
   }
 
   onChangeHandler = event => {
-    console.log('[event.target.name]', event.target.name);
-    this.setState({ [event.target.name]: event.target.value });
+    const {name, value} = event.target;
+
+    switch(name){
+      case 'email':
+      case 'password':
+        this.setState({
+          [name]: {
+            ...this.state[name],
+            value
+          }
+        }); break;
+      default:
+        this.setState({ [name]: value }); 
+        break;
+    }
+
+
+    
   }
   
-  onSubmitHandler = () => {
-    console.log('%c[SUBMITTED]', 'color: teel; font-style: italic;');
-  }
+  onSubmitHandler = event => {
+    event.preventDefault();
+
+    const { email, password } = this.state;
+
+    const submitedData = {
+      email,
+      password
+    };
+
+    console.log('%c[SUBMITTED]', 'color: lightgreen; font-style: italic;');
+    console.log(JSON.stringify(submitedData, null, 2));
+  };
+
+  onBlurHandler = event => {
+    
+    const { name, value } = event.target;
+
+    switch (name) {
+      case 'email':
+        // проверка на регулярные выражения
+        if(/^[a-z0-9._-]+@[a-z0-9]+\.+[a-z]{2,3}/.test(value) || !value.length) {
+          this.setState({
+            [name]: {
+              ...this.state[name],
+              error: false
+            }
+          })
+        } else {
+          this.setState({
+            [name]: {
+              ...this.state[name],
+              error: true
+            }
+          })
+        } 
+        break;
+
+      case 'password':
+        if(value.length < 6 && value.length) {
+          this.setState({
+            [name]: {
+              ...this.state[name],
+              error: true
+            }
+          })
+        } else {
+          this.setState({
+            [name]: {
+              ...this.state[name],
+              error: false
+            }
+          })
+        } 
+        break;
+
+      default: break;
+    }
+  };
 
   switchModeHandler = () => {
     this.setState(prevState => ({
       mode: prevState.mode === 'signup' ? 'signin' : 'signup'
     }))
-  }
+  };
 
   render() {
     const { searchField, email, password, mode } = this.state;
@@ -70,6 +150,7 @@ class App extends PureComponent {
                 onChangeHandler = {this.onChangeHandler}
                 onSubmitHandler = {this.onSubmitHandler}
                 switchModeHandler = {this.switchModeHandler}
+                onBlurHandler = {this.onBlurHandler}
               />
           )} />
 

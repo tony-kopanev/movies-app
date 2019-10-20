@@ -4,8 +4,8 @@
   padding-top: calc(92px + 30px);
 
   form {
-    background: #654ea3; 
-    background: linear-gradient(to right, #eaafc8, #654ea3);
+    background: #093028; 
+    background: linear-gradient(to right, #237A57, #093028);
     padding: 40px 50px;
     border-radius: 4px;
     max-width: 500px;
@@ -19,10 +19,16 @@
       align-self: center;
       margin-bottom: 15px; 
     }
-    .Input {
+
+    label{
+      display: flex;
+      flex-direction: column;
       margin-bottom: 15px;
-      
       &:last-of-type {margin-bottom: 30px;}
+    }
+
+    .Input {
+      margin-bottom: 5px;
     }
 
     h2{
@@ -33,7 +39,7 @@
       font-size: 1.6rem;
     }
 
-    span {
+    .ModeToggler {
       color: white;
       border-bottom: 1px dotted transparent;
       user-select: none;
@@ -43,6 +49,13 @@
       font-size: .85rem;
 
       &:hover { border-color: white; }
+    }
+
+    .ErrorMessage {
+      color: white;
+      font-family: sans-serif;
+      font-size: .95rem;
+      text-align: left;
     }
   }
 }

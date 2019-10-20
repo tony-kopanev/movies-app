@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 import './Button.scss';
 
-const Button = ({ type = 'button', clicked, children }) => {
+const Button = ({ type = 'button', classList, clicked, children }) => {
     return (
         <button 
-          className="Button"
+          className= { classList ? "Button " + classList : "Button" }
           type = {type}
           onClick = {(clicked)}
         >
@@ -17,6 +17,7 @@ const Button = ({ type = 'button', clicked, children }) => {
 
 Button.propTypes = {
     type: PropTypes.string,
+    classList: PropTypes.oneOfType([ PropTypes.string, PropTypes.bool ]),
     clicked: PropTypes.func,
     // types: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     // таким образом можем задавать сразу несколько типов
