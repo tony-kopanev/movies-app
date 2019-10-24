@@ -5,7 +5,16 @@ import Input from '../UI/Input/Input';
 import Button from '../UI/Button/Button';
 import './Auth.scss';
 
-const Auth = ({ email, password, mode, onSubmitHandler, onChangeHandler, switchModeHandler, onBlurHandler }) => {
+const Auth = ({ 
+  email, 
+  password, 
+  mode, 
+  onSubmitHandler, 
+  onChangeHandler, 
+  switchModeHandler, 
+  onBlurHandler,
+  isSubmitted  
+}) => {
 
     return (
         <div className="Auth">
@@ -40,9 +49,16 @@ const Auth = ({ email, password, mode, onSubmitHandler, onChangeHandler, switchM
 
               <Button 
                 type='submit'
-                classList = { (email.error || password.error) && 'Alternative' }
+                classList = {
+                  isSubmitted ? 'Disabled' 
+                  : (email.error || password.error) && 'Alternative' 
+                }
               >
-                  { mode === 'signup' ? 'Sign Up' : 'Sign In' }
+                  {
+                    isSubmitted
+                    ? 'Submitting...' 
+                    : mode === 'signup' ? 'Sign Up' : 'Sign In' 
+                  }
               </Button>
 
               <span
@@ -62,7 +78,8 @@ Auth.propTypes = {
   onSubmitHandler: PropTypes.func.isRequired,
   switchModeHandler: PropTypes.func.isRequired,
   onBlurHandler: PropTypes.func.isRequired,
-  onChangeHandler: PropTypes.func.isRequired
+  onChangeHandler: PropTypes.func.isRequired,
+  isSubmitted: PropTypes.bool.isRequired
 }
 
 export default Auth;

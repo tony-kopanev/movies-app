@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, withRouter } from 'react-router-dom'
 
 import Toolbar from './components/Toolbar/Toolbar';
 import Movies from './components/Movies/Movies';
@@ -24,7 +24,8 @@ class App extends PureComponent {
       error: false,
       message: 'The password should be minimum 6 characters length.'
     },
-    mode: 'signup'
+    mode: 'signup',
+    isSubmitted: false
   }
   
   componentDidMount() {
@@ -47,24 +48,60 @@ class App extends PureComponent {
       default:
         this.setState({ [name]: value }); 
         break;
-    }
-
-
-    
+    }    
   }
   
   onSubmitHandler = event => {
     event.preventDefault();
 
-    const { email, password } = this.state;
+    const { email, password, /*isSubmitted,*/ mode } = this.state;
 
-    const submitedData = {
-      email,
-      password
-    };
+    if (email.value === '' || password.value === '' || email.error || password.error) return;
 
-    console.log('%c[SUBMITTED]', 'color: lightgreen; font-style: italic;');
-    console.log(JSON.stringify(submitedData, null, 2));
+    this.setState({ isSubmitted: true });
+
+    //const { history } = this.props;
+
+    // let baseUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
+      
+    // if (mode === 'signin') 
+    //   baseUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
+
+    const baseUrl = mode === 'signup'
+      ? 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='
+      : 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
+
+    const apiKey = 'AIzaSyBdQshjgR0sZTEEO8qZiJP33dlj6LU-VsE';
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value,
+        returnSecureToken: true
+      })};
+
+    fetch(baseUrl + apiKey, options)
+      .then(res => res.json())
+      .then(result => {
+        console.log('[result]', result);
+        this.setState({
+          email: {
+            ...email,
+            value: '',
+          },
+          password: {
+            ...password,
+            value: '',
+          },
+          isSubmitted: false
+        });
+      })
+      //.then(() => history.push('/'))
+      .catch(err => {
+        console.log('[err]', err)
+        this.setState({ isSubmitted: false });
+      })
+
   };
 
   onBlurHandler = event => {
@@ -120,7 +157,7 @@ class App extends PureComponent {
   };
 
   render() {
-    const { searchField, email, password, mode } = this.state;
+    const { searchField, email, password, mode, isSubmitted } = this.state;
     const { isFetching, moviesList, fetchMovies } = this.props;
     
     return (
@@ -147,6 +184,7 @@ class App extends PureComponent {
                 email = {email}
                 password = {password}
                 mode = {mode}
+                isSubmitted = {isSubmitted}
                 onChangeHandler = {this.onChangeHandler}
                 onSubmitHandler = {this.onSubmitHandler}
                 switchModeHandler = {this.switchModeHandler}
@@ -173,7 +211,6 @@ class App extends PureComponent {
 
 const mapStateToProps = state => {
   return {
-    sayHello: state.movies.sayHello, // this.props.sayHello
     moviesList: state.movies.moviesList,
     isFetching: state.movies.isFetching
   };
@@ -185,4 +222,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
   
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(App));
