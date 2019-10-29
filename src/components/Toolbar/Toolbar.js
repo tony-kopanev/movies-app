@@ -5,7 +5,7 @@ import Input from '../UI/Input/Input';
 import Button from '../UI/Button/Button';
 import './Toolbar.scss';
 
-const Toolbar = ({ search, changed, isFetching, clicked }) => (
+const Toolbar = ({ search, idToken, changed, isFetching, clicked }) => (
   <div className="Toolbar">
       <Input 
         placeholder = "Search..."
@@ -13,6 +13,8 @@ const Toolbar = ({ search, changed, isFetching, clicked }) => (
         name = 'searchfield'
         onChangeHandler = {changed}
       />
+
+      <strong>Hello, <span>{ idToken ? 'AUTHENTICATED' : 'ANONYMOUS' }</span> user!</strong>
 
       <Button clicked = {clicked}>
         { isFetching ? 'Serching...' : 'Search' }
@@ -22,6 +24,7 @@ const Toolbar = ({ search, changed, isFetching, clicked }) => (
 
 Toolbar.propTypes = {
     search: PropTypes.string.isRequired,
+    idToken: PropTypes.string,
     changed: PropTypes.func.isRequired,
     clicked: PropTypes.func.isRequired,
     isFetching: PropTypes.bool.isRequired,

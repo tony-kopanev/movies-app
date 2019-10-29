@@ -13,7 +13,7 @@ const Auth = ({
   onChangeHandler, 
   switchModeHandler, 
   onBlurHandler,
-  isSubmitted  
+  isSubmitting  
 }) => {
 
     return (
@@ -50,12 +50,12 @@ const Auth = ({
               <Button 
                 type='submit'
                 classList = {
-                  isSubmitted ? 'Disabled' 
+                  isSubmitting ? 'Disabled' 
                   : (email.error || password.error) && 'Alternative' 
                 }
               >
                   {
-                    isSubmitted
+                    isSubmitting
                     ? 'Submitting...' 
                     : mode === 'signup' ? 'Sign Up' : 'Sign In' 
                   }
@@ -63,7 +63,7 @@ const Auth = ({
 
               <span
                 className = 'ModeToggler'
-                onClick = { switchModeHandler }>
+                onClick = { () => switchModeHandler(mode === 'signin' ? 'signup' : 'signin') }>
                 Switch to { mode === 'signin' ? 'Sign Up' : 'Sign In' }
                 </span>
             </form>
@@ -79,7 +79,7 @@ Auth.propTypes = {
   switchModeHandler: PropTypes.func.isRequired,
   onBlurHandler: PropTypes.func.isRequired,
   onChangeHandler: PropTypes.func.isRequired,
-  isSubmitted: PropTypes.bool.isRequired
+  isSubmitting: PropTypes.bool.isRequired
 }
 
 export default Auth;

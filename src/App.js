@@ -6,6 +6,7 @@ import Toolbar from './components/Toolbar/Toolbar';
 import Movies from './components/Movies/Movies';
 import Footer from './components/Footer/Footer';
 import { fetchMovies } from './store/actions/movieActions';
+import { authenticateUser, switchAuthMode } from './store/actions/auth';
 import Auth from './components/Auth/Auth';
 
 import './App.scss';
@@ -24,13 +25,32 @@ class App extends PureComponent {
       error: false,
       message: 'The password should be minimum 6 characters length.'
     },
-    mode: 'signup',
-    isSubmitted: false
+    //isSubmitted: false
   }
   
   componentDidMount() {
     const { fetchMovies } = this.props;
     fetchMovies('Black');
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { idToken, history } = this.props;
+    const { email, password } = this.state;
+
+    if(prevProps.idToken !== idToken){
+      this.setState({
+        email: {
+          ...email,
+          value: ''
+        },
+        password: {
+          ...password,
+          value: ''
+        }
+      })
+      history.push('/');
+    }
+
   }
 
   onChangeHandler = event => {
@@ -54,53 +74,14 @@ class App extends PureComponent {
   onSubmitHandler = event => {
     event.preventDefault();
 
-    const { email, password, /*isSubmitted,*/ mode } = this.state;
+    const { email, password } = this.state;
+    const { mode } = this.props;
 
     if (email.value === '' || password.value === '' || email.error || password.error) return;
 
-    this.setState({ isSubmitted: true });
+    const { authenticateUser } = this.props;
 
-    //const { history } = this.props;
-
-    // let baseUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
-      
-    // if (mode === 'signin') 
-    //   baseUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
-
-    const baseUrl = mode === 'signup'
-      ? 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='
-      : 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
-
-    const apiKey = 'AIzaSyBdQshjgR0sZTEEO8qZiJP33dlj6LU-VsE';
-    const options = {
-      method: 'POST',
-      body: JSON.stringify({
-        email: email.value,
-        password: password.value,
-        returnSecureToken: true
-      })};
-
-    fetch(baseUrl + apiKey, options)
-      .then(res => res.json())
-      .then(result => {
-        console.log('[result]', result);
-        this.setState({
-          email: {
-            ...email,
-            value: '',
-          },
-          password: {
-            ...password,
-            value: '',
-          },
-          isSubmitted: false
-        });
-      })
-      //.then(() => history.push('/'))
-      .catch(err => {
-        console.log('[err]', err)
-        this.setState({ isSubmitted: false });
-      })
+    authenticateUser(mode, email.value, password.value)
 
   };
 
@@ -150,20 +131,23 @@ class App extends PureComponent {
     }
   };
 
-  switchModeHandler = () => {
-    this.setState(prevState => ({
-      mode: prevState.mode === 'signup' ? 'signin' : 'signup'
-    }))
-  };
-
   render() {
-    const { searchField, email, password, mode, isSubmitted } = this.state;
-    const { isFetching, moviesList, fetchMovies } = this.props;
+    const { searchField, email, password } = this.state;
+    const { 
+      moviesList,
+      mode,
+      idToken,
+      isFetching,
+      isSubmitting,
+      fetchMovies,
+      switchAuthMode 
+    } = this.props;
     
     return (
       <div className="App">
         <Toolbar 
           search = {searchField}
+          idToken = {idToken}
           isFetching = {isFetching} 
           changed = {this.onChangeHandler}
           // clicked = {this.fetchMoviesHandler}
@@ -184,10 +168,11 @@ class App extends PureComponent {
                 email = {email}
                 password = {password}
                 mode = {mode}
-                isSubmitted = {isSubmitted}
+                isSubmitting = {isSubmitting}
                 onChangeHandler = {this.onChangeHandler}
                 onSubmitHandler = {this.onSubmitHandler}
-                switchModeHandler = {this.switchModeHandler}
+                // switchModeHandler = {this.switchModeHandler}
+                switchModeHandler = {switchAuthMode}
                 onBlurHandler = {this.onBlurHandler}
               />
           )} />
@@ -212,13 +197,19 @@ class App extends PureComponent {
 const mapStateToProps = state => {
   return {
     moviesList: state.movies.moviesList,
-    isFetching: state.movies.isFetching
+    isFetching: state.movies.isFetching,
+    isSubmitting: state.auth.isSubmitting,
+    mode: state.auth.mode,
+    idToken: state.auth.idToken
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     fetchMovies: request => dispatch(fetchMovies(request)),
+    authenticateUser: (mode, email, password) => dispatch(authenticateUser(mode, email, password)),
+    switchAuthMode: mode => dispatch(switchAuthMode(mode)),
+
   };
 };
   

@@ -1,3 +1,8 @@
-export const SAY_HELLO = 'SAY_HELLO';
+// movies
 export const TOGGLE_LOADING = 'TOGGLE_LOADING';
 export const UPDATE_MOVIES = 'UPDATE_MOVIES';
+
+// auth
+export const SWITCH_AUTH_MODE = 'SWITCH_AUTH_MODE';
+export const TOGGLE_SUBMITTING = 'TOGGLE_SUBMITTING';
+export const AUTHENTICATE_USER = 'AUTHENTICATE_USER';
