@@ -6,7 +6,7 @@ import Toolbar from './components/Toolbar/Toolbar';
 import Movies from './components/Movies/Movies';
 import Footer from './components/Footer/Footer';
 import { fetchMovies } from './store/actions/movieActions';
-import { authenticateUser, switchAuthMode } from './store/actions/auth';
+import { authenticateUser, switchAuthMode, authenticate as autoAuthUser, logoutUser } from './store/actions/auth';
 import Auth from './components/Auth/Auth';
 
 import './App.scss';
@@ -29,8 +29,15 @@ class App extends PureComponent {
   }
   
   componentDidMount() {
-    const { fetchMovies } = this.props;
+    const { fetchMovies, autoAuthUser } = this.props;
     fetchMovies('Black');
+
+    const idToken = localStorage.getItem('idToken');
+    const localId = localStorage.getItem('localId');
+
+    if(idToken && localId)
+      autoAuthUser(idToken, localId)
+      //console.log('[IS_AUTH]');
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -140,7 +147,8 @@ class App extends PureComponent {
       isFetching,
       isSubmitting,
       fetchMovies,
-      switchAuthMode 
+      switchAuthMode,
+      logoutUser
     } = this.props;
     
     return (
@@ -152,6 +160,7 @@ class App extends PureComponent {
           changed = {this.onChangeHandler}
           // clicked = {this.fetchMoviesHandler}
           clicked = { () => fetchMovies(searchField) }
+          logout = {logoutUser}
         />
 
         {/* <Movies 
@@ -188,7 +197,7 @@ class App extends PureComponent {
               )} 
           />
         </Switch>
-         <Footer />
+         <Footer idToken = {idToken} />
       </div>
     );
   };
@@ -209,7 +218,8 @@ const mapDispatchToProps = dispatch => {
     fetchMovies: request => dispatch(fetchMovies(request)),
     authenticateUser: (mode, email, password) => dispatch(authenticateUser(mode, email, password)),
     switchAuthMode: mode => dispatch(switchAuthMode(mode)),
-
+    autoAuthUser: (idToken, localId) => dispatch(autoAuthUser(idToken, localId)),
+    logoutUser: () => dispatch(logoutUser())
   };
 };
   

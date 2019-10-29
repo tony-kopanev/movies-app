@@ -1,4 +1,4 @@
-import { AUTHENTICATE_USER, TOGGLE_SUBMITTING, SWITCH_AUTH_MODE } from '../actionsTypes';
+import { AUTHENTICATE_USER, TOGGLE_SUBMITTING, SWITCH_AUTH_MODE, LOGOUT_USER } from '../actionsTypes';
 
 const initialState = {
   idToken: null,
@@ -29,11 +29,20 @@ const switchAuthMode = (state, mode) => {
   };
 };
 
+const logoutUser = state => {
+  return {
+    ...state,
+    idToken: '',
+    localId: ''
+  };
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type){
     case AUTHENTICATE_USER: return authenticateUser(state, action);
     case TOGGLE_SUBMITTING: return toggleSubmitting(state, action.status);
     case SWITCH_AUTH_MODE: return switchAuthMode(state, action.mode);
+    case LOGOUT_USER: return logoutUser(state);
 
     default: return state;
   }

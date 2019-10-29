@@ -1,4 +1,4 @@
-import { TOGGLE_SUBMITTING, AUTHENTICATE_USER, SWITCH_AUTH_MODE } from '../actionsTypes';
+import { TOGGLE_SUBMITTING, AUTHENTICATE_USER, SWITCH_AUTH_MODE, LOGOUT_USER } from '../actionsTypes';
 
 export const authenticateUser = (mode, email, password) => {
   return dispatch => {
@@ -19,8 +19,13 @@ export const authenticateUser = (mode, email, password) => {
 
     fetch(baseUrl + apiKey, options)
       .then(res => res.json())
-      .then(({ idToken, localId }) => dispatch(authenticate(idToken, localId)))
-      //.then(() => dispatch(toggleSubmitting(false)))
+      .then(({ idToken, localId }) => {
+        dispatch(authenticate(idToken, localId));
+
+        localStorage.setItem('idToken', idToken);
+        localStorage.setItem('localId', localId);
+      })
+      .then(() => dispatch(toggleSubmitting(false)))
       .catch(err => {
         console.log('[err]', err)
         dispatch(toggleSubmitting(false));
@@ -42,10 +47,19 @@ export const switchAuthMode = mode =>{
   };
 };
 
-const authenticate = (idToken, localId) => {
+export const authenticate = (idToken, localId) => {
   return {
     type: AUTHENTICATE_USER,
     idToken,
     localId
+  };
+};
+
+export const logoutUser = () => {
+  localStorage.removeItem('idToken');
+  localStorage.removeItem('localId');
+
+  return {
+    type: LOGOUT_USER
   };
 };
