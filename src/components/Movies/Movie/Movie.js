@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-//import Button from '../../UI/Button/Button';
+import Button from '../../UI/Button/Button';
 import './Movie.scss';
 
-const Movie = ({ movieData }) => {
+const Movie = ({ movieData, idToken, addMoviesToList }) => {
   const { id, backdrop_path, title, overview, poster_path } = movieData;
   const baseUrl = 'https://image.tmdb.org/t/p/w500/';
   //const baseUrl = 'https://image.tmdb.org/t/p/original/';
@@ -18,8 +18,10 @@ const Movie = ({ movieData }) => {
         <div className="ImageWrapper">
           <img src = {baseUrl+poster_path} alt={title} />
         </div>
-  
-        <p>{overview}</p>
+        <div className='overviewWrapper'>
+          <p>{overview}</p>
+          <Button clicked = { () => addMoviesToList(title) }>Add to list</Button>
+        </div>
       </div>
   
       <Link to={'/' + id} className='LinkButton'>Read More</Link>
@@ -36,6 +38,8 @@ Movie.propTypes = {
         PropTypes.oneOf([null]).isRequired,
       ]
     ),
+    idToken: PropTypes.string,
+    addMoviesToList: PropTypes.func.isRequired,
 };
 
 export default Movie;

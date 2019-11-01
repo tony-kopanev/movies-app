@@ -11,7 +11,6 @@ import Auth from './components/Auth/Auth';
 
 import './App.scss';
 
-
 class App extends PureComponent {
   state = {
     searchField: '',
@@ -138,6 +137,76 @@ class App extends PureComponent {
     }
   };
 
+  addMoviesToList = title => {
+    const {localId} = this.props;
+
+  
+
+    const baseUrl = 'https://movies-app-a8b7e.firebaseio.com/';
+
+    fetch(baseUrl + 'movies.json')
+      .then(res => res.json())
+      .then(data => {
+        console.log('[data]', data);
+
+        if(!data) {
+          const options = {
+            method: 'POST',
+            body: JSON.stringify({
+              localId,
+              list: [title]
+            })
+          };
+
+          fetch(baseUrl + 'movies.json', options)
+          .then(res => res.json())
+          .then(data => console.log('[data]', data))
+          .catch(err => console.log('[err]', err));
+        } else {
+          let user, userKey;
+
+          for (const key in data){
+            user = data[key];
+
+            if(localId === user.localId){
+              user.list.push(title);
+              userKey = key;
+              break;
+            }
+          }
+
+          if(userKey) {
+            const options = {
+              method: 'PUT',
+              body: JSON.stringify(user.list)
+            };
+  
+            fetch(baseUrl + `movies/${userKey}/list.json`, options)
+              .then(res => res.json())
+              .then(data => console.log('[data]', data))
+              .catch(err => console.log('[err]', err))
+          } else {
+            const options = {
+              method: 'POST',
+              body: JSON.stringify({
+                localId,
+                list: [title]
+              })
+            };
+
+            fetch(baseUrl + 'movies.json', options)
+              .then(res => res.json())
+              .then(data => console.log('[data]', data))
+              .catch(err => console.log('[err]', err));
+          }
+
+
+          console.log('[data exist]', data);
+        }
+      })
+      .catch(err => console.log('[err]', err))
+  };
+
   render() {
     const { searchField, email, password } = this.state;
     const { 
@@ -193,6 +262,8 @@ class App extends PureComponent {
                   {...props}
                   moviesList = {moviesList}
                   isFetching = {isFetching}
+                  idToken = {idToken}
+                  addMoviesToList = {this.addMoviesToList}
                 />
               )} 
           />
@@ -209,7 +280,8 @@ const mapStateToProps = state => {
     isFetching: state.movies.isFetching,
     isSubmitting: state.auth.isSubmitting,
     mode: state.auth.mode,
-    idToken: state.auth.idToken
+    idToken: state.auth.idToken,
+    localId: state.auth.localId,
   };
 };
 

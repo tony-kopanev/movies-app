@@ -10,7 +10,11 @@ const Footer = ({ idToken }) => {
             <strong>All Rights Reserved { new Date().getFullYear() }</strong>
             <ul>
               <li><NavLink to="/" exact>Home</NavLink></li>
-              { !idToken && <li><NavLink to="/auth">Authentication</NavLink></li> }
+              { 
+                !idToken 
+                  ? <li><NavLink to="/auth">Authentication</NavLink></li> 
+                  : <li><NavLink to="/list">Movies List</NavLink></li> 
+              }
             </ul>
         </div>
     );
