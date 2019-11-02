@@ -1,0 +1,27 @@
+.MoviesList {
+  background-image: radial-gradient(blue, lightblue);
+  padding: 30px;
+  padding-top: calc(92px + 30px);
+
+  .List {
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+    background-color: rgba(white, .6);
+    border-radius: 4px;
+    padding: 30px;
+
+    ol {
+      list-style-position: inside;
+    }
+    h3{
+      margin-bottom: 20px;
+      span{ color: blue; }
+    }
+
+    strong{
+      margin-bottom: 15px;
+      display: block;
+    }
+  }
+}

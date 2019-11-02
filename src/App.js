@@ -6,8 +6,15 @@ import Toolbar from './components/Toolbar/Toolbar';
 import Movies from './components/Movies/Movies';
 import Footer from './components/Footer/Footer';
 import { fetchMovies } from './store/actions/movieActions';
-import { authenticateUser, switchAuthMode, authenticate as autoAuthUser, logoutUser } from './store/actions/auth';
+import {
+  authenticateUser,
+  switchAuthMode,
+  authenticate as autoAuthUser,
+  logoutUser,
+  setUserMovies,
+} from './store/actions/auth';
 import Auth from './components/Auth/Auth';
+import MoviesList from './components/MoviesList/MoviesList';
 
 import './App.scss';
 
@@ -24,23 +31,24 @@ class App extends PureComponent {
       error: false,
       message: 'The password should be minimum 6 characters length.'
     },
-    //isSubmitted: false
+    userMovies: null
   }
   
   componentDidMount() {
-    const { fetchMovies, autoAuthUser } = this.props;
+    const { fetchMovies, autoAuthUser, setUserMovies } = this.props;
     fetchMovies('Black');
 
     const idToken = localStorage.getItem('idToken');
     const localId = localStorage.getItem('localId');
 
-    if(idToken && localId)
-      autoAuthUser(idToken, localId)
-      //console.log('[IS_AUTH]');
+    if(idToken && localId) {
+      autoAuthUser(idToken, localId);
+      setUserMovies(localId);
+    }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { idToken, history } = this.props;
+  componentDidUpdate(prevProps) {
+    const { idToken, history, localId, setUserMovies } = this.props;
     const { email, password } = this.state;
 
     if(prevProps.idToken !== idToken){
@@ -54,9 +62,10 @@ class App extends PureComponent {
           value: ''
         }
       })
+
+      setUserMovies(localId);
       history.push('/');
     }
-
   }
 
   onChangeHandler = event => {
@@ -140,14 +149,12 @@ class App extends PureComponent {
   addMoviesToList = title => {
     const {localId} = this.props;
 
-  
-
     const baseUrl = 'https://movies-app-a8b7e.firebaseio.com/';
 
     fetch(baseUrl + 'movies.json')
       .then(res => res.json())
       .then(data => {
-        console.log('[data]', data);
+        console.log('[data-get]', data);
 
         if(!data) {
           const options = {
@@ -160,7 +167,7 @@ class App extends PureComponent {
 
           fetch(baseUrl + 'movies.json', options)
           .then(res => res.json())
-          .then(data => console.log('[data]', data))
+          .then(data => console.log('[data-post]', data))
           .catch(err => console.log('[err]', err));
         } else {
           let user, userKey;
@@ -183,7 +190,7 @@ class App extends PureComponent {
   
             fetch(baseUrl + `movies/${userKey}/list.json`, options)
               .then(res => res.json())
-              .then(data => console.log('[data]', data))
+              .then(data => console.log('[data-put]', data))
               .catch(err => console.log('[err]', err))
           } else {
             const options = {
@@ -196,7 +203,7 @@ class App extends PureComponent {
 
             fetch(baseUrl + 'movies.json', options)
               .then(res => res.json())
-              .then(data => console.log('[data]', data))
+              .then(data => console.log('[data-post-2]', data))
               .catch(err => console.log('[err]', err));
           }
 
@@ -212,9 +219,11 @@ class App extends PureComponent {
     const { 
       moviesList,
       mode,
+      localId,
       idToken,
       isFetching,
       isSubmitting,
+      userMovies,
       fetchMovies,
       switchAuthMode,
       logoutUser
@@ -238,6 +247,17 @@ class App extends PureComponent {
         /> */}
 
          <Switch>
+          <Route 
+            path = "/list" 
+            render = { props => (
+              <MoviesList
+                {...props}
+                localId = {localId}
+                list = {userMovies}
+              />
+          )} />
+
+
           <Route 
             path="/auth" 
             render = { props => (
@@ -282,6 +302,7 @@ const mapStateToProps = state => {
     mode: state.auth.mode,
     idToken: state.auth.idToken,
     localId: state.auth.localId,
+    userMovies: state.auth.userMovies
   };
 };
 
@@ -291,7 +312,8 @@ const mapDispatchToProps = dispatch => {
     authenticateUser: (mode, email, password) => dispatch(authenticateUser(mode, email, password)),
     switchAuthMode: mode => dispatch(switchAuthMode(mode)),
     autoAuthUser: (idToken, localId) => dispatch(autoAuthUser(idToken, localId)),
-    logoutUser: () => dispatch(logoutUser())
+    logoutUser: () => dispatch(logoutUser()),
+    setUserMovies: localId => dispatch(setUserMovies(localId)),
   };
 };
   

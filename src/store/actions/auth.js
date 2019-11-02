@@ -1,4 +1,11 @@
-import { TOGGLE_SUBMITTING, AUTHENTICATE_USER, SWITCH_AUTH_MODE, LOGOUT_USER } from '../actionsTypes';
+import { 
+  TOGGLE_SUBMITTING,
+  AUTHENTICATE_USER,
+  SWITCH_AUTH_MODE,
+  LOGOUT_USER,
+  REMOVE_USER_MOVIES,
+  SET_USER_MOVIES
+} from '../actionsTypes';
 
 export const authenticateUser = (mode, email, password) => {
   return dispatch => {
@@ -56,10 +63,49 @@ export const authenticate = (idToken, localId) => {
 };
 
 export const logoutUser = () => {
-  localStorage.removeItem('idToken');
-  localStorage.removeItem('localId');
+  return dispatch => {
+    localStorage.removeItem('idToken');
+    localStorage.removeItem('localId');
+    dispatch(removeUserMovies());
+    dispatch(logout());
+  }
+};
 
+const logout = () => {
   return {
     type: LOGOUT_USER
+  }; 
+};
+
+const addUserMovies = movies => {
+  return {
+    type: SET_USER_MOVIES,
+    movies
   };
+};
+
+export const setUserMovies = localId => {
+  return dispatch => {
+
+    const baseUrl = 'https://movies-app-a8b7e.firebaseio.com/';
+    fetch(baseUrl + 'movies.json')
+      .then(res => res.json())
+      .then(data => {
+        for(const key in data) {
+          const user = data[key];
+
+          if(user.localId === localId) {
+            dispatch(addUserMovies(user.list))
+          }
+        }
+      })
+      .catch(err => console.log('[err]', err));
+
+  };
+};
+
+const removeUserMovies = () => {
+  return {
+    type: REMOVE_USER_MOVIES,
+  }
 };

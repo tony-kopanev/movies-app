@@ -5,5 +5,5 @@
 
   export default combineReducers({
     movies: moviesReducer,
-    auth: authReducer
+    auth: authReducer,
   });
