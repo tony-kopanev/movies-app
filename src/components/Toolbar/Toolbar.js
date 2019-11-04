@@ -18,6 +18,7 @@ const Toolbar = ({ search, idToken, changed, isFetching, clicked, logout }) => (
 
       <div className = 'ButtonsWrapper'>
         { idToken && <Button clicked = {logout}>LogOut</Button> }
+        {/* { idToken && <button onClick = {logout}>LogOut</button> } */}
         
         <Button clicked = {clicked}>
           { isFetching ? 'Serching...' : 'Search' }
