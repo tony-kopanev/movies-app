@@ -1,7 +1,6 @@
 import * as actionTypes from '../actionsTypes';
 
-const initialState = {
-  sayHello: false,
+export const initialState = {
   isFetching: false,
   moviesList: []
 };
@@ -17,8 +16,8 @@ const updateMovies = (state, movies) => {
   return {
     ...state,
     moviesList: movies
-  }
-}
+  };
+};
 
 
 const reducer = (state = initialState, action) => {
