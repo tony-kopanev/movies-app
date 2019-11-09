@@ -6,6 +6,30 @@ import { GET_MOVIE_DATA, GET_IMG_DATA } from '../actionsTypes';
 // fetch(`${baseURL + idMovie}?api_key=${apiKey}&language=uk-UA`)
 // fetch(`${baseURL}?api_key=${apiKey}&id=${idMovie}`)
 
+export const getFullDataMovie = idMovie => {
+
+  const apiKey = '52eae72c07d6cd03afd7491a82451f7b';
+  const baseURL = 'https://api.themoviedb.org/3/movie/';
+
+  return dispatch => {
+    const requestGetMovies = `${baseURL + idMovie}?api_key=${apiKey}&language=uk-UA`;
+    fetch(requestGetMovies)
+      .then(res => res.json())
+      .then(data => {
+        dispatch(getMovieData(data));
+      })
+      .catch(err => console.log('[err]', err));
+
+    const requestGetImgLang = baseURL + idMovie + `/images?api_key=${apiKey}&language=uk-UA&include_image_language=uk,null`;
+    fetch(requestGetImgLang)
+      .then(res => res.json())
+      .then(data => {
+        dispatch(getImgData(data));
+      })
+      .catch(err => console.log('[err]', err));
+  };
+};
+
 export const getMovies = idMovie => {
 
   const apiKey = '52eae72c07d6cd03afd7491a82451f7b';
@@ -37,7 +61,6 @@ export const getImgLang = idMovie => {
     fetch(request)
     .then(res => res.json())
     .then(data => {
-      console.log('[data]', data);
       dispatch(getImgData(data));
     })
     .catch(err => console.log('[err]', err));

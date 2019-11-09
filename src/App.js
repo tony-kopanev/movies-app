@@ -6,7 +6,6 @@ import Toolbar from './components/Toolbar/Toolbar';
 import Movies from './components/Movies/Movies';
 import Footer from './components/Footer/Footer';
 import { fetchMovies } from './store/actions/movieActions';
-import { getMovies, getImgLang } from './store/actions/fullMovie';
 import {
   authenticateUser,
   switchAuthMode,
@@ -225,21 +224,10 @@ class App extends PureComponent {
       isFetching,
       isSubmitting,
       userMovies,
-      movieData,
-      imgData,
       fetchMovies,
       switchAuthMode,
       logoutUser,
-      getMovies,
-      getImgLang
     } = this.props;
-
-    const fullMovieData = {
-      movieData,
-      imgData,
-      getMovies,
-      getImgLang
-    };
     
     return (
       <div className="App">
@@ -291,8 +279,6 @@ class App extends PureComponent {
             render = { props => (
               <FullMovies
                 {...props}
-                idToken = {idToken}
-                fullMovieData = {fullMovieData}
               />
           )} />
 
@@ -324,8 +310,6 @@ const mapStateToProps = state => {
     idToken: state.auth.idToken,
     localId: state.auth.localId,
     userMovies: state.auth.userMovies,
-    movieData: state.fullMovie.movieData,
-    imgData: state.fullMovie.imgData
   };
 };
 
@@ -336,10 +320,7 @@ const mapDispatchToProps = dispatch => {
     switchAuthMode: mode => dispatch(switchAuthMode(mode)),
     autoAuthUser: (idToken, localId) => dispatch(autoAuthUser(idToken, localId)),
     logoutUser: () => dispatch(logoutUser()),
-    setUserMovies: localId => dispatch(setUserMovies(localId)),
-    getMovies: idMovie => dispatch(getMovies(idMovie)),
-    getImgLang: idMovie => dispatch(getImgLang(idMovie)),
-    
+    setUserMovies: localId => dispatch(setUserMovies(localId)),  
   };
 };
   

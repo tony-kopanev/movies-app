@@ -1,16 +1,26 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, Component} from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import { getFullDataMovie } from '../../store/actions/fullMovie';
 import { Wrapper, HeaderWrapper, ImageWrapper } from './styledComponentsByFullMovies';
 
 // https://api.themoviedb.org/3/movie/550/images?api_key={api_key}&language=en-US&include_image_language=en,null
 
+class FullMovies extends Component{
 
-const FullMovies = ({idToken, match, fullMovieData}) => {
-  const { getMovies, movieData, imgData, getImgLang } = fullMovieData;
+  componentDidMount(){
+    const { match, movieData, getFullDataMovie } = this.props;
 
-  getImgLang(match.params.movieID);
-  if(!movieData) getMovies(match.params.movieID);
+    if(!movieData) getFullDataMovie(match.params.movieID);
+  };
+
+  shouldComponentUpdate(nextProps){
+    return nextProps.imgData;
+  };
+
+  render(){
+    const { match, movieData, imgData } = this.props;
 
     return (
       <Fragment>
@@ -24,12 +34,27 @@ const FullMovies = ({idToken, match, fullMovieData}) => {
         </Wrapper>
       </Fragment>
     );
-};
+  };
+}
 
 FullMovies.propTypes = {
   idToken: PropTypes.string,
   match: PropTypes.object.isRequired,
-  fullMovieData: PropTypes.object.isRequired
+  getFullDataMovie: PropTypes.func.isRequired,
 };
 
-export default FullMovies;
+const mapStateToProps = state => {
+  return {
+    movieData: state.fullMovie.movieData,
+    imgData: state.fullMovie.imgData,
+    idToken: state.auth.idToken
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getFullDataMovie: idMovie => dispatch(getFullDataMovie(idMovie)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(FullMovies);
