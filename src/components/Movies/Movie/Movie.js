@@ -24,7 +24,7 @@ const Movie = ({ movieData, idToken, addMoviesToList }) => {
         </div>
       </div>
   
-      <Link to={'/' + id} className='LinkButton'>Read More</Link>
+      <Link to={'/fullMovies/' + id} className='LinkButton'>Read More</Link>
       {/* <Button>READ MORE</Button> */}
     </div>
   );

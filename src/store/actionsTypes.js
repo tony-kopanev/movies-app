@@ -9,3 +9,7 @@ export const AUTHENTICATE_USER = 'AUTHENTICATE_USER';
 export const LOGOUT_USER = 'LOGOUT_USER';
 export const REMOVE_USER_MOVIES = 'REMOVE_USER_MOVIES';
 export const SET_USER_MOVIES = 'SET_USER_MOVIES';
+
+// fullMovie
+export const GET_MOVIE_DATA = 'GET_MOVIE_DATA';
+export const GET_IMG_DATA = 'GET_IMG_DATA';

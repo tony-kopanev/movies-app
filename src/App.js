@@ -6,6 +6,7 @@ import Toolbar from './components/Toolbar/Toolbar';
 import Movies from './components/Movies/Movies';
 import Footer from './components/Footer/Footer';
 import { fetchMovies } from './store/actions/movieActions';
+import { getMovies, getImgLang } from './store/actions/fullMovie';
 import {
   authenticateUser,
   switchAuthMode,
@@ -15,6 +16,7 @@ import {
 } from './store/actions/auth';
 import Auth from './components/Auth/Auth';
 import MoviesList from './components/MoviesList/MoviesList';
+import FullMovies from './components/FullMovies/FullMovies';
 
 import './App.scss';
 
@@ -207,7 +209,6 @@ class App extends PureComponent {
               .catch(err => console.log('[err]', err));
           }
 
-
           console.log('[data exist]', data);
         }
       })
@@ -224,10 +225,21 @@ class App extends PureComponent {
       isFetching,
       isSubmitting,
       userMovies,
+      movieData,
+      imgData,
       fetchMovies,
       switchAuthMode,
-      logoutUser
+      logoutUser,
+      getMovies,
+      getImgLang
     } = this.props;
+
+    const fullMovieData = {
+      movieData,
+      imgData,
+      getMovies,
+      getImgLang
+    };
     
     return (
       <div className="App">
@@ -257,7 +269,6 @@ class App extends PureComponent {
               />
           )} />
 
-
           <Route 
             path="/auth" 
             render = { props => (
@@ -272,6 +283,16 @@ class App extends PureComponent {
                 // switchModeHandler = {this.switchModeHandler}
                 switchModeHandler = {switchAuthMode}
                 onBlurHandler = {this.onBlurHandler}
+              />
+          )} />
+
+          <Route 
+            path="/fullMovies/:movieID" 
+            render = { props => (
+              <FullMovies
+                {...props}
+                idToken = {idToken}
+                fullMovieData = {fullMovieData}
               />
           )} />
 
@@ -302,7 +323,9 @@ const mapStateToProps = state => {
     mode: state.auth.mode,
     idToken: state.auth.idToken,
     localId: state.auth.localId,
-    userMovies: state.auth.userMovies
+    userMovies: state.auth.userMovies,
+    movieData: state.fullMovie.movieData,
+    imgData: state.fullMovie.imgData
   };
 };
 
@@ -314,6 +337,9 @@ const mapDispatchToProps = dispatch => {
     autoAuthUser: (idToken, localId) => dispatch(autoAuthUser(idToken, localId)),
     logoutUser: () => dispatch(logoutUser()),
     setUserMovies: localId => dispatch(setUserMovies(localId)),
+    getMovies: idMovie => dispatch(getMovies(idMovie)),
+    getImgLang: idMovie => dispatch(getImgLang(idMovie)),
+    
   };
 };
   
