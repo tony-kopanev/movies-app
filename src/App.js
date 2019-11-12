@@ -279,6 +279,7 @@ class App extends PureComponent {
             render = { props => (
               <FullMovies
                 {...props}
+                addMoviesToList = {this.addMoviesToList}
               />
           )} />
 

@@ -12,4 +12,5 @@ export const SET_USER_MOVIES = 'SET_USER_MOVIES';
 
 // fullMovie
 export const GET_MOVIE_DATA = 'GET_MOVIE_DATA';
-export const GET_IMG_DATA = 'GET_IMG_DATA';
+export const GET_CREDITS_DATA = 'GET_CREDITS_DATA';
+export const UNSET_MOVIE_DATA = 'UNSET_MOVIE_DATA';

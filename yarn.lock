@@ -803,6 +803,66 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@bit/styled-components.polished.color.parse-to-rgb@3.2.0":
+  version "3.2.0"
+  resolved "https://node.bit.dev/styled-components.polished.color.parse-to-rgb/-/styled-components.polished.color.parse-to-rgb-3.2.0.tgz#46af728861d5650f594617920deb5db51c6db901"
+  integrity sha1-Rq9yiGHVZQ9ZRheSDetdtRxtuQE=
+  dependencies:
+    "@bit/styled-components.polished.internal._errors" "3.2.0"
+    "@bit/styled-components.polished.internal._hsl-to-rgb" "3.2.0"
+    "@bit/styled-components.polished.internal._name-to-hex" "3.2.0"
+    "@bit/styled-components.polished.types.color" "3.2.0"
+
+"@bit/styled-components.polished.color.rgb@3.2.0":
+  version "3.2.0"
+  resolved "https://node.bit.dev/styled-components.polished.color.rgb/-/styled-components.polished.color.rgb-3.2.0.tgz#da31928f30dd70f2ee0e27e7164a6b723d705638"
+  integrity sha1-2jGSjzDdcPLuDifnFkprcj1wVjg=
+  dependencies:
+    "@bit/styled-components.polished.internal._errors" "3.2.0"
+    "@bit/styled-components.polished.internal._number-to-hex" "3.2.0"
+    "@bit/styled-components.polished.internal._reduce-hex-value" "3.2.0"
+    "@bit/styled-components.polished.types.color" "3.2.0"
+
+"@bit/styled-components.polished.color.rgba@^3.2.0":
+  version "3.2.0"
+  resolved "https://node.bit.dev/styled-components.polished.color.rgba/-/styled-components.polished.color.rgba-3.2.0.tgz#e4ad016861f25f44dd518ba0f2e216d8ba264baf"
+  integrity sha1-5K0BaGHyX0TdUYug8uIW2LomS68=
+  dependencies:
+    "@bit/styled-components.polished.color.parse-to-rgb" "3.2.0"
+    "@bit/styled-components.polished.color.rgb" "3.2.0"
+    "@bit/styled-components.polished.internal._errors" "3.2.0"
+    "@bit/styled-components.polished.types.color" "3.2.0"
+
+"@bit/styled-components.polished.internal._errors@3.2.0":
+  version "3.2.0"
+  resolved "https://node.bit.dev/styled-components.polished.internal._errors/-/styled-components.polished.internal._errors-3.2.0.tgz#bb1d49dd3bfd264483d3a2672d4f0c782194375e"
+  integrity sha1-ux1J3Tv9JkSD06JnLU8MeCGUN14=
+
+"@bit/styled-components.polished.internal._hsl-to-rgb@3.2.0":
+  version "3.2.0"
+  resolved "https://node.bit.dev/styled-components.polished.internal._hsl-to-rgb/-/styled-components.polished.internal._hsl-to-rgb-3.2.0.tgz#cf81859b7bfb32da3bb169505ea1d0b04b2162dc"
+  integrity sha1-z4GFm3v7Mto7sWlQXqHQsEshYtw=
+
+"@bit/styled-components.polished.internal._name-to-hex@3.2.0":
+  version "3.2.0"
+  resolved "https://node.bit.dev/styled-components.polished.internal._name-to-hex/-/styled-components.polished.internal._name-to-hex-3.2.0.tgz#0bd4794809b87ba3104e29f57a2dc2c4d5fd4048"
+  integrity sha1-C9R5SAm4e6MQTin1ei3CxNX9QEg=
+
+"@bit/styled-components.polished.internal._number-to-hex@3.2.0":
+  version "3.2.0"
+  resolved "https://node.bit.dev/styled-components.polished.internal._number-to-hex/-/styled-components.polished.internal._number-to-hex-3.2.0.tgz#7c0c32b9dbc598e5256e28f669ee40f6963e6c4e"
+  integrity sha1-fAwyudvFmOUlbij2ae5A9pY+bE4=
+
+"@bit/styled-components.polished.internal._reduce-hex-value@3.2.0":
+  version "3.2.0"
+  resolved "https://node.bit.dev/styled-components.polished.internal._reduce-hex-value/-/styled-components.polished.internal._reduce-hex-value-3.2.0.tgz#aad4623ce7d12e99c85feb20ce4d0f6b861b7ae6"
+  integrity sha1-qtRiPOfRLpnIX+sgzk0Pa4YbeuY=
+
+"@bit/styled-components.polished.types.color@3.2.0":
+  version "3.2.0"
+  resolved "https://node.bit.dev/styled-components.polished.types.color/-/styled-components.polished.types.color-3.2.0.tgz#548911d57b275250166c1cd8240fb9bb7af56395"
+  integrity sha1-VIkR1XsnUlAWbBzYJA+5u3r1Y5U=
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.3.tgz#099139eaec7ebf07a27c1786a3ff64f39464d2ef"

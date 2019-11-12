@@ -1,4 +1,4 @@
-import { GET_MOVIE_DATA, GET_IMG_DATA } from '../actionsTypes';
+import { GET_MOVIE_DATA, UNSET_MOVIE_DATA, GET_CREDITS_DATA } from '../actionsTypes';
 
 
 // https://api.themoviedb.org/3/movie/{movie_id}?api_key=<<api_key>>&language=en-US
@@ -20,53 +20,18 @@ export const getFullDataMovie = idMovie => {
       })
       .catch(err => console.log('[err]', err));
 
-    const requestGetImgLang = baseURL + idMovie + `/images?api_key=${apiKey}&language=uk-UA&include_image_language=uk,null`;
+      // https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=<<api_key>>
+
+
+    const requestGetImgLang = baseURL + idMovie + `/credits?api_key=${apiKey}&language=uk-UA`;
     fetch(requestGetImgLang)
       .then(res => res.json())
-      .then(data => {
-        dispatch(getImgData(data));
+      .then(credits => {
+        dispatch(getCreditsData(credits));
       })
       .catch(err => console.log('[err]', err));
   };
 };
-
-export const getMovies = idMovie => {
-
-  const apiKey = '52eae72c07d6cd03afd7491a82451f7b';
-  const baseURL = 'https://api.themoviedb.org/3/movie/';
-
-  return dispatch => {
-    console.log('yes1');
-
-    const request = `${baseURL + idMovie}?api_key=${apiKey}&language=uk-UA`;
-  
-    fetch(request)
-      .then(res => res.json())
-      .then(data => {
-        dispatch(getMovieData(data));
-      })
-      .catch(err => console.log('[err]', err));
-  };
-};
-
-export const getImgLang = idMovie => {
-  const baseUrl = "https://api.themoviedb.org/3/movie/";
-  const apiKey = '52eae72c07d6cd03afd7491a82451f7b';
-  
-  return dispatch => {
-
-    const request = baseUrl + idMovie + `/images?api_key=${apiKey}&language=uk-UA&include_image_language=uk,null`;
-    console.log('yes');
-    
-    fetch(request)
-    .then(res => res.json())
-    .then(data => {
-      dispatch(getImgData(data));
-    })
-    .catch(err => console.log('[err]', err));
-  };
-
-}
 
 const getMovieData = data => {
   return {
@@ -75,9 +40,11 @@ const getMovieData = data => {
   };
 };
 
-const getImgData = data => {
+export const unsetMovieData = () => { return  { type: UNSET_MOVIE_DATA }; };
+
+const getCreditsData = credits => {
   return {
-    type: GET_IMG_DATA,
-    data
+    type: GET_CREDITS_DATA,
+    credits
   };
 };

@@ -1,8 +1,8 @@
-import { GET_MOVIE_DATA, GET_IMG_DATA } from '../actionsTypes';
+import { GET_MOVIE_DATA, GET_CREDITS_DATA, UNSET_MOVIE_DATA } from '../actionsTypes';
 
 const initialState = {
   movieData: null,
-  imgData: null
+  credits: null
 };
 
 const getMovieData = (state, data) => {
@@ -12,17 +12,26 @@ const getMovieData = (state, data) => {
   };
 };
 
-const getImgData = (state, data) => {
+const getCreditsData = (state, credits) => {
   return {
     ...state,
-    imgData: data
+    credits
+  };
+};
+
+const unsetMovieData = state =>{
+  return{
+    ...state,
+    movieData: null,
+    credits: null
   };
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type){
     case GET_MOVIE_DATA: return getMovieData(state, action.data);
-    case GET_IMG_DATA: return getImgData(state, action.data);
+    case UNSET_MOVIE_DATA: return unsetMovieData(state);
+    case GET_CREDITS_DATA: return getCreditsData(state, action.credits);
 
     default: return state;
   }
