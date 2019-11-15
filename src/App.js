@@ -246,7 +246,7 @@ class App extends PureComponent {
           isFetching = {isFetching}
         /> */}
 
-         <Switch>
+        <Switch>
           <Route 
             path = "/list" 
             render = { props => (
@@ -321,7 +321,7 @@ const mapDispatchToProps = dispatch => {
     switchAuthMode: mode => dispatch(switchAuthMode(mode)),
     autoAuthUser: (idToken, localId) => dispatch(autoAuthUser(idToken, localId)),
     logoutUser: () => dispatch(logoutUser()),
-    setUserMovies: localId => dispatch(setUserMovies(localId)),  
+    setUserMovies: localId => dispatch(setUserMovies(localId)),
   };
 };
   

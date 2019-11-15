@@ -1,21 +1,30 @@
 import React, {Fragment, Component} from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import styled, { createGlobalStyle } from 'styled-components';
 
 import { getFullDataMovie, unsetMovieData } from '../../store/actions/fullMovie';
-import Button from '../UI/Button/Button';
 import Spinner from '../UI/Spinner/Spinner';
 
-import {
-  GlobalStyle,
-  Wrapper,
-  HeaderWrapper,
-  ImageWrapper,
-  TittleWrapper,
-  FeaturedCrew,
-} from './styledComponentsByFullMovies';
+import HeaderSection from './HeaderSection';
+import Main from './Main';
 
 // https://api.themoviedb.org/3/movie/550/images?api_key={api_key}&language=en-US&include_image_language=en,null
+
+const GlobalStyle = createGlobalStyle`
+  @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
+ 
+ body {
+   padding: 0;
+   margin: 0;
+   font-family: 'Source Sans Pro', Arial, sans-serif;
+ }
+`;
+
+const Wrapper = styled.div `
+  padding: 30px 75px;
+  padding-top: calc(92px + 30px);
+`;
 
 class FullMovies extends Component{
 
@@ -42,58 +51,15 @@ class FullMovies extends Component{
   };
 
   render(){
-    const { addMoviesToList, movieData, credits } = this.props;
+    //const { addMoviesToList, movieData, credits } = this.props;
+    const { movieData, credits } = this.props;
     // https://image.tmdb.org/t/p/w500/kqjL17yufvn9OVLyXYpvtyrFfak.jpg
-
-    const baseUrlImg = 'https://image.tmdb.org/t/p';
-    const sizeImg = '/w500';
-    const sizeImgBg = '/w1400_and_h450_face';
-    //console.log('[movieData]', movieData);
-    console.log('[credits]', credits);
-  
     if (movieData && credits){
-      const {
-        poster_path,
-        title,
-        original_title,
-        overview,
-        backdrop_path,
-      } = movieData;
-      const urlImg = baseUrlImg + sizeImg + poster_path;
-      const altImg = title + ' poster';
-      const bgImg = baseUrlImg + sizeImgBg + backdrop_path;
-      
-      const { crew } = credits;
-      const directors = crew.filter(crw => crw.job === "Director").map(director => <h3 key={director.id}>{director.name}</h3>);
-      const writers = crew.filter(crw => crw.job === "Writer").map(writer => <h3 key={writer.id}>{writer.name}</h3>);
-
 
       return (
         <Fragment>
-          <HeaderWrapper bgImg = {bgImg}>
-            <ImageWrapper>
-              <img src={urlImg} alt={altImg} />
-            </ImageWrapper>
-            <TittleWrapper>
-              <h1>{title}</h1>
-              <Button clicked = { () => addMoviesToList(original_title) }>Add to list</Button>
-              <div className='overview'>
-                <h2>Огляд:</h2>
-                <p>{overview}</p>
-              </div>
-              <h2 className = 'FeaturedCrew'>Featured Crew</h2>
-              <FeaturedCrew>
-                <div>
-                  {directors}
-                  <span>{directors.length < 2 ? "Director" : "Directors"}</span>
-                </div>
-                <div>
-                  {writers}
-                  <span>{writers.length < 2 ? "Writer" : "Writers"}</span>
-                </div>
-              </FeaturedCrew>
-            </TittleWrapper>
-          </HeaderWrapper>
+          <HeaderSection movieData = {movieData} crew = {credits.crew} />
+          <Main casts = { credits.cast.slice(0, 10) }/>
           <GlobalStyle />
         </Fragment>
       );

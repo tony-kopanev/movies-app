@@ -1,4 +1,7 @@
 import { GET_MOVIE_DATA, UNSET_MOVIE_DATA, GET_CREDITS_DATA } from '../actionsTypes';
+//import { browserHistory } from 'react-router'
+//import { createBrowserHistory } from 'history';
+
 
 
 // https://api.themoviedb.org/3/movie/{movie_id}?api_key=<<api_key>>&language=en-US
@@ -8,8 +11,11 @@ import { GET_MOVIE_DATA, UNSET_MOVIE_DATA, GET_CREDITS_DATA } from '../actionsTy
 
 export const getFullDataMovie = idMovie => {
 
+  console.log('[111]', 111);
+
   const apiKey = '52eae72c07d6cd03afd7491a82451f7b';
   const baseURL = 'https://api.themoviedb.org/3/movie/';
+  //const browserHistory = createBrowserHistory();
 
   return dispatch => {
     const requestGetMovies = `${baseURL + idMovie}?api_key=${apiKey}&language=uk-UA`;

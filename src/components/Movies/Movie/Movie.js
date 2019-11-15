@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+ import { Link } from 'react-router-dom';
 
 import Button from '../../UI/Button/Button';
 import './Movie.scss';
@@ -25,7 +25,7 @@ const Movie = ({ movieData, idToken, addMoviesToList }) => {
       </div>
   
       <Link to={'/fullMovies/' + id} className='LinkButton'>Read More</Link>
-      {/* <Button>READ MORE</Button> */}
+      {/* <Button clicked = { () => getFullDataMovie(id, history) }>READ MORE</Button> */}
     </div>
   );
 }
