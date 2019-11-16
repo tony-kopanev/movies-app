@@ -47,19 +47,38 @@ class FullMovies extends Component{
   }
 
   shouldComponentUpdate(nextProps){
-    return nextProps.credits;
+    //const { recommendations, match:{ params: { movieID } } } = this.props;
+    return nextProps.recommendations;
+    //return nextProps.recommendations && movieID === nextProps.match.params.movieID;
+    // if(nextProps.recommendations && recommendations){
+    //   //console.log('yes', recommendations[0].id !== nextProps.recommendations[0].id);
+    //   console.log('[next]', nextProps.recommendations[0].id);
+    //   console.log('[curr]', recommendations[0].id);
+    //   if(recommendations[0].id !== nextProps.recommendations[0].id && movieID)
+    // }
+    // else false;
   };
+
+  componentDidUpdate(prevProps) {
+    const { match:{ params: { movieID } }, getFullDataMovie } = this.props;
+
+    if(movieID !== prevProps.match.params.movieID){  
+      getFullDataMovie(movieID);
+    }
+  }
 
   render(){
     //const { addMoviesToList, movieData, credits } = this.props;
-    const { movieData, credits } = this.props;
+    const { movieData, credits, recommendations } = this.props;
     // https://image.tmdb.org/t/p/w500/kqjL17yufvn9OVLyXYpvtyrFfak.jpg
-    if (movieData && credits){
-
+    if (movieData && credits && recommendations){
       return (
         <Fragment>
           <HeaderSection movieData = {movieData} crew = {credits.crew} />
-          <Main casts = { credits.cast.slice(0, 10) }/>
+          <Main 
+            casts = { credits.cast.slice(0, 10) }
+            recommendations = {recommendations}
+          />
           <GlobalStyle />
         </Fragment>
       );
@@ -85,13 +104,27 @@ FullMovies.propTypes = {
     PropTypes.oneOf([null]),
     PropTypes.object
   ]),
+  recommendations: function(props, propName, componentName) {
+
+    const type = isNaN(props[propName]) 
+      ? props[propName] === undefined ? "undefined" : "NaN" 
+      : typeof props[propName];
+
+    if(Array.isArray(props[propName]) || props[propName] === null)
+    return;
+    else
+      return new Error(`Ошибка propType в компоненте: ${componentName}! 
+        Пропс ${propName} должен иметь тип либо NULL, либо быть массивом - Array!
+        А передан был пропс типа ${type}`);
+  }
 };
 
 const mapStateToProps = state => {
   return {
     movieData: state.fullMovie.movieData,
     idToken: state.auth.idToken,
-    credits: state.fullMovie.credits
+    credits: state.fullMovie.credits,
+    recommendations: state.fullMovie.recommendations
   };
 };
 

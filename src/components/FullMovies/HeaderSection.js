@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 import Button from '../UI/Button/Button';
 
@@ -59,7 +60,7 @@ const TittleWrapper = styled.div `
     } 
   }
 
-  .overview { margin: 20px auto 40px auto; }
+  .overview { margin: 20px auto 20px auto; }
 
   div { margin: 0; }
 
@@ -73,6 +74,15 @@ const TittleWrapper = styled.div `
     align-self: flex-start; 
   }
   h2 { font-size: 1.3rem; }
+  a { 
+    text-decoration: none;
+    color: #6b6a6a;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+
+    &:hover { color: #8a8a8a; }
+  }
 `;
 
 const FeaturedCrew = styled.div `
@@ -106,7 +116,16 @@ const HeaderSection = ({ movieData, crew }) => {
 
   const directors   = crew.filter(crw => crw.job === "Director").map(director => <h3 key={director.id}>{director.name}</h3>),
         writers     = crew.filter(crw => crw.job === "Writer").map(writer => <h3 key={writer.id}>{writer.name}</h3>),
+        screenplays = crew.filter(crw => crw.job === "Screenplay").map(screenplay => <h3 key={screenplay.id}>{screenplay.name}</h3>),
         releaseYear = release_date.slice(0, 4);
+  
+  const directorsLabel = directors.length < 2 ? 'Director' : 'Directors';
+  let writersLabel, screenplayLabel;
+  if(writers.length < 1) {
+    screenplayLabel = screenplays.length < 2 ? 'Screenplay' : 'Screenplays';
+  } else {
+    writersLabel = writers.length < 2 ? 'Writer' : 'Writers';
+  }
 
     return (
       <Section bgImg = {bgImg}>
@@ -115,6 +134,7 @@ const HeaderSection = ({ movieData, crew }) => {
             <img src={urlImg} alt={altImg} />
           </ImageWrapper>
           <TittleWrapper>
+            <Link to={"/"}>← Повернутись на головну</Link>
             <h1>{title}<span> ({releaseYear})</span></h1>
             <Button clicked = { () => {} }>Add to list</Button>
             <div className='overview'>
@@ -125,11 +145,11 @@ const HeaderSection = ({ movieData, crew }) => {
             <FeaturedCrew>
               <div>
                 {directors}
-                <span>{directors.length < 2 ? "Director" : "Directors"}</span>
+                <span>{directorsLabel}</span>
               </div>
               <div>
-                {writers}
-                <span>{writers.length < 2 ? "Writer" : "Writers"}</span>
+                {writers.length < 1 ? screenplays : writers}
+                <span>{writers.length < 1 ? screenplayLabel : writersLabel}</span>
               </div>
             </FeaturedCrew>
           </TittleWrapper>

@@ -1,4 +1,4 @@
-import { GET_MOVIE_DATA, UNSET_MOVIE_DATA, GET_CREDITS_DATA } from '../actionsTypes';
+import { GET_MOVIE_DATA, UNSET_MOVIE_DATA, GET_CREDITS_DATA, GET_RECOMMENDATIONS_DATA } from '../actionsTypes';
 //import { browserHistory } from 'react-router'
 //import { createBrowserHistory } from 'history';
 
@@ -10,8 +10,6 @@ import { GET_MOVIE_DATA, UNSET_MOVIE_DATA, GET_CREDITS_DATA } from '../actionsTy
 // fetch(`${baseURL}?api_key=${apiKey}&id=${idMovie}`)
 
 export const getFullDataMovie = idMovie => {
-
-  console.log('[111]', 111);
 
   const apiKey = '52eae72c07d6cd03afd7491a82451f7b';
   const baseURL = 'https://api.themoviedb.org/3/movie/';
@@ -28,12 +26,19 @@ export const getFullDataMovie = idMovie => {
 
       // https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=<<api_key>>
 
-
-    const requestGetImgLang = baseURL + idMovie + `/credits?api_key=${apiKey}&language=uk-UA`;
-    fetch(requestGetImgLang)
+    const requestGetCredits = baseURL + idMovie + `/credits?api_key=${apiKey}&language=uk-UA`;
+    fetch(requestGetCredits)
       .then(res => res.json())
       .then(credits => {
         dispatch(getCreditsData(credits));
+      })
+      .catch(err => console.log('[err]', err));
+
+    const requestGetRecommendations = baseURL + idMovie + `/recommendations?api_key=${apiKey}&language=uk-UA&page=1`;
+    fetch(requestGetRecommendations)
+      .then(res => res.json())
+      .then(recommendations => {
+        dispatch(getRecommendationsData(recommendations.results));
       })
       .catch(err => console.log('[err]', err));
   };
@@ -52,5 +57,12 @@ const getCreditsData = credits => {
   return {
     type: GET_CREDITS_DATA,
     credits
+  };
+};
+
+const getRecommendationsData = recommendations => {
+  return {
+    type: GET_RECOMMENDATIONS_DATA,
+    recommendations
   };
 };
