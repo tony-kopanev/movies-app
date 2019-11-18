@@ -3,20 +3,31 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Spinner from '../UI/Spinner/Spinner';
+import gradients from './Movie/gradients';
 import Movie from './Movie/Movie';
 import './Movies.scss';
 
 const Movies = ({ moviesList, isFetching, idToken, addMoviesToList }) => {
 
   if (moviesList && moviesList.length){
-    const movies = moviesList.map(movie => (
+
+    let bgID = 0;
+    const movies = moviesList.map(movie => {
+
+      if(bgID === gradients.length) bgID = 0;
+      const bgGrad = gradients[bgID];
+      bgID ++;
+      //console.log('[bgGrad]', bgGrad);
+      
+      return (
       <Movie 
         key={movie.id}
         movieData = {movie}
         idToken = {idToken}
         addMoviesToList = {addMoviesToList}
+        bgGrad = {bgGrad}
       />
-    ));
+    )});
 
     return (
       <div className = 'Movies'>
@@ -26,9 +37,7 @@ const Movies = ({ moviesList, isFetching, idToken, addMoviesToList }) => {
     );
   }
 
-  return null;
-
-   
+  return null; 
 };
 
 

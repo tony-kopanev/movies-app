@@ -69,12 +69,12 @@ class FullMovies extends Component{
 
   render(){
     //const { addMoviesToList, movieData, credits } = this.props;
-    const { movieData, credits, recommendations } = this.props;
+    const { movieData, credits, recommendations, idToken } = this.props;
     // https://image.tmdb.org/t/p/w500/kqjL17yufvn9OVLyXYpvtyrFfak.jpg
     if (movieData && credits && recommendations){
       return (
         <Fragment>
-          <HeaderSection movieData = {movieData} crew = {credits.crew} />
+          <HeaderSection movieData = {movieData} crew = {credits.crew} idToken = {idToken} />
           <Main 
             casts = { credits.cast.slice(0, 10) }
             recommendations = {recommendations}
@@ -93,7 +93,6 @@ class FullMovies extends Component{
 }
 
 FullMovies.propTypes = {
-  idToken: PropTypes.string,
   match: PropTypes.object.isRequired,
   getFullDataMovie: PropTypes.func.isRequired,
   movieData: PropTypes.oneOfType([
@@ -103,6 +102,10 @@ FullMovies.propTypes = {
   credits: PropTypes.oneOfType([
     PropTypes.oneOf([null]),
     PropTypes.object
+  ]),
+  idToken: PropTypes.oneOfType([
+    PropTypes.oneOf([null]),
+    PropTypes.string
   ]),
   recommendations: function(props, propName, componentName) {
 

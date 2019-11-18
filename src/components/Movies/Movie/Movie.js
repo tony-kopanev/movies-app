@@ -3,31 +3,33 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import Button from '../../UI/Button/Button';
-import './Movie.scss';
+//import './Movie.scss';
+import MovieItem from './MovieItem';
+import MovieContent from './MovieContent';
 
-const Movie = ({ movieData, idToken, addMoviesToList }) => {
+const Movie = ({ movieData, idToken, addMoviesToList, bgGrad }) => {
   const { id, backdrop_path, title, overview, poster_path } = movieData;
   const baseUrl = 'https://image.tmdb.org/t/p/w500/';
-  //const baseUrl = 'https://image.tmdb.org/t/p/original/';
 
   return (
-    <div className="Movie" style = {{ backgroundImage: `url(${baseUrl+backdrop_path})` }}>
+    <MovieItem 
+      backgroundParagraph = {`url(${baseUrl+backdrop_path})`}
+      backgroundBefore = {bgGrad}
+    >
       <h1>{title}</h1>
-  
-      <div className="MovieContent">
+      <MovieContent>
         <div className="ImageWrapper">
           <img src = {baseUrl+poster_path} alt={title} />
         </div>
         <div className='overviewWrapper'>
           <p>{overview}</p>
-          <Button clicked = { () => addMoviesToList(title) }>Add to list</Button>
-        </div>
-      </div>
-  
+          { idToken && <Button clicked = { () => addMoviesToList(title) }>Add to list</Button> }
+         </div>
+      </MovieContent>
       <Link to={'/fullMovies/' + id} className='LinkButton'>Read More</Link>
       {/* <Button clicked = { () => getFullDataMovie(id, history) }>READ MORE</Button> */}
-    </div>
-  );
+    </MovieItem>
+  )
 }
 
 Movie.propTypes = {

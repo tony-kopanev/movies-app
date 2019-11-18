@@ -4,11 +4,23 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 import Button from '../UI/Button/Button';
+import gradients from '../Movies/Movie/gradients';
+
+function randomInteger(min, max) {
+  var rand = min + Math.random() * (max + 1 - min);
+  rand = Math.floor(rand);
+  return rand;
+};
+
+const grad = gradients[randomInteger(0, gradients.length - 1)];
 
 const Section = styled.section `
   background: 
-  radial-gradient(circle at 20% 50%, rgba(19.61%, 7.84%, 7.84%, 0.98) 0%, rgba(27.45%, 13.73%, 13.73%, 0.88) 100%),
-  url(${p => p.bgImg}) no-repeat 50% 50%;
+    /* radial-gradient(circle at 20% 50%, #481414 0%, #4c2b27e0 100%), */
+    radial-gradient(circle at 20% 50%, 
+      ${ grad[0] } 0%,
+      ${ grad[1] } 100%),
+    url(${p => p.bgImg}) no-repeat 50% 50%;
   background-size: cover;
   height: auto;
   max-width: 1920px;
@@ -96,7 +108,7 @@ const FeaturedCrew = styled.div `
   h3, span { font-size: .9rem; }
 `;
 
-const HeaderSection = ({ movieData, crew }) => {
+const HeaderSection = ({ movieData, crew, idToken }) => {
 
   const {
     poster_path,
@@ -136,7 +148,7 @@ const HeaderSection = ({ movieData, crew }) => {
           <TittleWrapper>
             <Link to={"/"}>← Повернутись на головну</Link>
             <h1>{title}<span> ({releaseYear})</span></h1>
-            <Button clicked = { () => {} }>Add to list</Button>
+            { idToken && <Button clicked = { () => {} }>Add to list</Button> }
             <div className='overview'>
               <h2>Огляд:</h2>
               <p>{overview}</p>

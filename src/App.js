@@ -5,7 +5,7 @@ import { Route, Switch, withRouter } from 'react-router-dom'
 import Toolbar from './components/Toolbar/Toolbar';
 import Movies from './components/Movies/Movies';
 import Footer from './components/Footer/Footer';
-import { fetchMovies } from './store/actions/movieActions';
+import { fetchMovies, fetchByPopularity } from './store/actions/movieActions';
 import {
   authenticateUser,
   switchAuthMode,
@@ -36,8 +36,8 @@ class App extends PureComponent {
   }
   
   componentDidMount() {
-    const { fetchMovies, autoAuthUser, setUserMovies } = this.props;
-    fetchMovies('Black');
+    const { fetchByPopularity, autoAuthUser, setUserMovies } = this.props;
+    fetchByPopularity();
 
     const idToken = localStorage.getItem('idToken');
     const localId = localStorage.getItem('localId');
@@ -280,6 +280,7 @@ class App extends PureComponent {
               <FullMovies
                 {...props}
                 addMoviesToList = {this.addMoviesToList}
+                idToken = {idToken}
               />
           )} />
 
@@ -317,6 +318,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchMovies: request => dispatch(fetchMovies(request)),
+    fetchByPopularity: () => dispatch(fetchByPopularity()),
     authenticateUser: (mode, email, password) => dispatch(authenticateUser(mode, email, password)),
     switchAuthMode: mode => dispatch(switchAuthMode(mode)),
     autoAuthUser: (idToken, localId) => dispatch(autoAuthUser(idToken, localId)),
