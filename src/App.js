@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Suspense, lazy } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom'
 
@@ -15,9 +15,11 @@ import {
 } from './store/actions/auth';
 import Auth from './components/Auth/Auth';
 import MoviesList from './components/MoviesList/MoviesList';
-import FullMovies from './components/FullMovies/FullMovies';
+import Spinner from './components/UI/Spinner/Spinner';
 
 import './App.scss';
+
+const AsyncFullMovies = lazy(() => import('./components/FullMovies/FullMovies'));
 
 class App extends PureComponent {
   state = {
@@ -277,11 +279,13 @@ class App extends PureComponent {
           <Route 
             path="/fullMovies/:movieID" 
             render = { props => (
-              <FullMovies
-                {...props}
-                addMoviesToList = {this.addMoviesToList}
-                idToken = {idToken}
-              />
+              <Suspense fallback = { <Spinner /> }>
+                <AsyncFullMovies 
+                  {...props}
+                  addMoviesToList = {this.addMoviesToList}
+                  idToken = {idToken}
+                />
+              </Suspense>
           )} />
 
           <Route

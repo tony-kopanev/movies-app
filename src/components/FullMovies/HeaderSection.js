@@ -16,7 +16,6 @@ const grad = gradients[randomInteger(0, gradients.length - 1)];
 
 const Section = styled.section `
   background: 
-    /* radial-gradient(circle at 20% 50%, #481414 0%, #4c2b27e0 100%), */
     radial-gradient(circle at 20% 50%, 
       ${ grad[0] } 0%,
       ${ grad[1] } 100%),

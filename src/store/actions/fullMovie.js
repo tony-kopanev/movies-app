@@ -1,4 +1,10 @@
-import { GET_MOVIE_DATA, UNSET_MOVIE_DATA, GET_CREDITS_DATA, GET_RECOMMENDATIONS_DATA } from '../actionsTypes';
+import {
+  GET_MOVIE_DATA,
+  UNSET_MOVIE_DATA,
+  GET_CREDITS_DATA,
+  GET_RECOMMENDATIONS_DATA,
+  TOGGLE_LOADING_FULL_MOVIE
+} from '../actionsTypes';
 //import { browserHistory } from 'react-router'
 //import { createBrowserHistory } from 'history';
 
@@ -17,29 +23,24 @@ export const getFullDataMovie = idMovie => {
 
   return dispatch => {
     const requestGetMovies = `${baseURL + idMovie}?api_key=${apiKey}&language=uk-UA`;
+    dispatch(toggleLoadingFullMovie(true));
+
     fetch(requestGetMovies)
       .then(res => res.json())
-      .then(data => {
-        dispatch(getMovieData(data));
-      })
+      .then(data => dispatch(getMovieData(data)))
       .catch(err => console.log('[err]', err));
-
-      // https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=<<api_key>>
 
     const requestGetCredits = baseURL + idMovie + `/credits?api_key=${apiKey}&language=uk-UA`;
     fetch(requestGetCredits)
       .then(res => res.json())
-      .then(credits => {
-        dispatch(getCreditsData(credits));
-      })
+      .then(credits => dispatch(getCreditsData(credits)))
       .catch(err => console.log('[err]', err));
 
     const requestGetRecommendations = baseURL + idMovie + `/recommendations?api_key=${apiKey}&language=uk-UA&page=1`;
     fetch(requestGetRecommendations)
       .then(res => res.json())
-      .then(recommendations => {
-        dispatch(getRecommendationsData(recommendations.results));
-      })
+      .then(recommendations => dispatch(getRecommendationsData(recommendations.results)))
+      .then(() => dispatch(toggleLoadingFullMovie(false)))
       .catch(err => console.log('[err]', err));
   };
 };
@@ -66,3 +67,10 @@ const getRecommendationsData = recommendations => {
     recommendations
   };
 };
+
+const toggleLoadingFullMovie = status => {
+  return {
+    type: TOGGLE_LOADING_FULL_MOVIE,
+    status
+  }
+}

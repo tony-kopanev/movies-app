@@ -9,8 +9,6 @@ import Spinner from '../UI/Spinner/Spinner';
 import HeaderSection from './HeaderSection';
 import Main from './Main';
 
-// https://api.themoviedb.org/3/movie/550/images?api_key={api_key}&language=en-US&include_image_language=en,null
-
 const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
  
@@ -47,16 +45,7 @@ class FullMovies extends Component{
   }
 
   shouldComponentUpdate(nextProps){
-    //const { recommendations, match:{ params: { movieID } } } = this.props;
-    return nextProps.recommendations;
-    //return nextProps.recommendations && movieID === nextProps.match.params.movieID;
-    // if(nextProps.recommendations && recommendations){
-    //   //console.log('yes', recommendations[0].id !== nextProps.recommendations[0].id);
-    //   console.log('[next]', nextProps.recommendations[0].id);
-    //   console.log('[curr]', recommendations[0].id);
-    //   if(recommendations[0].id !== nextProps.recommendations[0].id && movieID)
-    // }
-    // else false;
+    return !nextProps.isFetchingFullMovie;
   };
 
   componentDidUpdate(prevProps) {
@@ -69,11 +58,12 @@ class FullMovies extends Component{
 
   render(){
     //const { addMoviesToList, movieData, credits } = this.props;
-    const { movieData, credits, recommendations, idToken } = this.props;
-    // https://image.tmdb.org/t/p/w500/kqjL17yufvn9OVLyXYpvtyrFfak.jpg
+    const { movieData, credits, recommendations, idToken, isFetchingFullMovie } = this.props;
+
     if (movieData && credits && recommendations){
       return (
         <Fragment>
+          { isFetchingFullMovie && <Spinner /> }
           <HeaderSection movieData = {movieData} crew = {credits.crew} idToken = {idToken} />
           <Main 
             casts = { credits.cast.slice(0, 10) }
@@ -82,7 +72,8 @@ class FullMovies extends Component{
           <GlobalStyle />
         </Fragment>
       );
-    } else {
+    } 
+    else {
       return (
         <Wrapper>
           <Spinner />
@@ -119,7 +110,8 @@ FullMovies.propTypes = {
       return new Error(`Ошибка propType в компоненте: ${componentName}! 
         Пропс ${propName} должен иметь тип либо NULL, либо быть массивом - Array!
         А передан был пропс типа ${type}`);
-  }
+  },
+  isFetchingFullMovie: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = state => {
@@ -127,7 +119,8 @@ const mapStateToProps = state => {
     movieData: state.fullMovie.movieData,
     idToken: state.auth.idToken,
     credits: state.fullMovie.credits,
-    recommendations: state.fullMovie.recommendations
+    recommendations: state.fullMovie.recommendations,
+    isFetchingFullMovie: state.fullMovie.isFetchingFullMovie
   };
 };
 
