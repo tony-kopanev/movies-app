@@ -23,7 +23,7 @@ const Movie = ({ movieData, idToken, addMoviesToList, bgGrad }) => {
         </div>
         <div className='overviewWrapper'>
           <p>{overview}</p>
-          { idToken && <Button clicked = { () => addMoviesToList(title) }>Add to list</Button> }
+          { idToken && <Button clicked = { () => addMoviesToList(id) }>Add to list</Button> }
          </div>
       </MovieContent>
       <Link to={'/fullMovies/' + id} className='LinkButton'>Read More</Link>

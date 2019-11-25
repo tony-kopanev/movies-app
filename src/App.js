@@ -1,4 +1,4 @@
-import React, { PureComponent, Suspense, lazy } from 'react';
+import React, { Component, Suspense, lazy } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom'
 
@@ -11,7 +11,8 @@ import {
   switchAuthMode,
   authenticate as autoAuthUser,
   logoutUser,
-  setUserMovies,
+  addUserMovies,
+  recoveryUserMoviesList
 } from './store/actions/auth';
 import Auth from './components/Auth/Auth';
 import MoviesList from './components/MoviesList/MoviesList';
@@ -21,7 +22,7 @@ import './App.scss';
 
 const AsyncFullMovies = lazy(() => import('./components/FullMovies/FullMovies'));
 
-class App extends PureComponent {
+class App extends Component {
   state = {
     searchField: '',
     email: {
@@ -38,20 +39,21 @@ class App extends PureComponent {
   }
   
   componentDidMount() {
-    const { fetchByPopularity, autoAuthUser, setUserMovies } = this.props;
+    const { fetchByPopularity, autoAuthUser, recoveryUserMoviesList } = this.props;
     fetchByPopularity();
 
     const idToken = localStorage.getItem('idToken');
     const localId = localStorage.getItem('localId');
-
-    if(idToken && localId) {
-      autoAuthUser(idToken, localId);
-      setUserMovies(localId);
+    const keyDb = localStorage.getItem('keyDb');
+    
+    if(idToken && localId && keyDb) {
+      autoAuthUser(idToken, localId, keyDb);
+      recoveryUserMoviesList(keyDb);
     }
-  }
+  };
 
   componentDidUpdate(prevProps) {
-    const { idToken, history, localId, setUserMovies } = this.props;
+    const { idToken, history } = this.props;
     const { email, password } = this.state;
 
     if(prevProps.idToken !== idToken){
@@ -66,13 +68,13 @@ class App extends PureComponent {
         }
       })
 
-      setUserMovies(localId);
       history.push('/');
     }
   }
 
   onChangeHandler = event => {
     const {name, value} = event.target;
+    console.log('handler is work');
 
     switch(name){
       case 'email':
@@ -149,71 +151,46 @@ class App extends PureComponent {
     }
   };
 
-  addMoviesToList = title => {
-    const {localId} = this.props;
+  addMoviesToList = idMovie => {
+    const {localId, keyDb, updateUserMovies} = this.props;
+    const secret = 'yTCcnymnwnjnjD5dES6HtAlE4qbzIoAJK1zsD8HB';
+    const baseUrl = `https://movies-app-a8b7e.firebaseio.com/movies/${keyDb}/.json?auth=${secret}`;
 
-    const baseUrl = 'https://movies-app-a8b7e.firebaseio.com/';
+    const setDataUserMoviesList = (localId, list) => {
+      const options = {
+        method: 'PATCH',
+        body: JSON.stringify({ list, localId })
+      };
 
-    fetch(baseUrl + 'movies.json')
+      fetch(baseUrl, options)
+        .then(res => res.json())
+        .then(data => console.log('[data_patch]', data))
+        .catch(err => console.log('[err]', err))
+    };
+
+
+    fetch(baseUrl)
       .then(res => res.json())
       .then(data => {
-        console.log('[data-get]', data);
-
-        if(!data) {
-          const options = {
-            method: 'POST',
-            body: JSON.stringify({
-              localId,
-              list: [title]
-            })
-          };
-
-          fetch(baseUrl + 'movies.json', options)
-          .then(res => res.json())
-          .then(data => console.log('[data-post]', data))
-          .catch(err => console.log('[err]', err));
+        if(data.list){
+          if(!data.list.includes(idMovie)){
+            data.list.push(idMovie);
+            setDataUserMoviesList(localId, data.list);
+            updateUserMovies(data.list)
+          }
         } else {
-          let user, userKey;
-
-          for (const key in data){
-            user = data[key];
-
-            if(localId === user.localId){
-              user.list.push(title);
-              userKey = key;
-              break;
-            }
-          }
-
-          if(userKey) {
-            const options = {
-              method: 'PUT',
-              body: JSON.stringify(user.list)
-            };
-  
-            fetch(baseUrl + `movies/${userKey}/list.json`, options)
-              .then(res => res.json())
-              .then(data => console.log('[data-put]', data))
-              .catch(err => console.log('[err]', err))
-          } else {
-            const options = {
-              method: 'POST',
-              body: JSON.stringify({
-                localId,
-                list: [title]
-              })
-            };
-
-            fetch(baseUrl + 'movies.json', options)
-              .then(res => res.json())
-              .then(data => console.log('[data-post-2]', data))
-              .catch(err => console.log('[err]', err));
-          }
-
-          console.log('[data exist]', data);
+          setDataUserMoviesList(localId, [idMovie]);
+          updateUserMovies([idMovie]);
         }
       })
       .catch(err => console.log('[err]', err))
+  };
+
+  shouldComponentUpdate(nextProps, nextState){
+    const { isFetching, isSubmitting } = this.props;
+    return ((isFetching && !nextProps.isFetching) || 
+            (isSubmitting && !nextProps.isSubmitting) || 
+            (this.state.searchField !== nextState.searchField));
   };
 
   render() {
@@ -225,11 +202,14 @@ class App extends PureComponent {
       idToken,
       isFetching,
       isSubmitting,
+      keyDb,
       userMovies,
       fetchMovies,
       switchAuthMode,
       logoutUser,
     } = this.props;
+
+    console.log('---[render]---');
     
     return (
       <div className="App">
@@ -238,15 +218,9 @@ class App extends PureComponent {
           idToken = {idToken}
           isFetching = {isFetching} 
           changed = {this.onChangeHandler}
-          // clicked = {this.fetchMoviesHandler}
           clicked = { () => fetchMovies(searchField) }
           logout = {logoutUser}
         />
-
-        {/* <Movies 
-          moviesList = {moviesList}
-          isFetching = {isFetching}
-        /> */}
 
         <Switch>
           <Route 
@@ -270,7 +244,6 @@ class App extends PureComponent {
                 isSubmitting = {isSubmitting}
                 onChangeHandler = {this.onChangeHandler}
                 onSubmitHandler = {this.onSubmitHandler}
-                // switchModeHandler = {this.switchModeHandler}
                 switchModeHandler = {switchAuthMode}
                 onBlurHandler = {this.onBlurHandler}
               />
@@ -297,6 +270,7 @@ class App extends PureComponent {
                   isFetching = {isFetching}
                   idToken = {idToken}
                   addMoviesToList = {this.addMoviesToList}
+                  keyDb = {keyDb}
                 />
               )} 
           />
@@ -316,6 +290,7 @@ const mapStateToProps = state => {
     idToken: state.auth.idToken,
     localId: state.auth.localId,
     userMovies: state.auth.userMovies,
+    keyDb: state.auth.keyDb
   };
 };
 
@@ -325,9 +300,10 @@ const mapDispatchToProps = dispatch => {
     fetchByPopularity: () => dispatch(fetchByPopularity()),
     authenticateUser: (mode, email, password) => dispatch(authenticateUser(mode, email, password)),
     switchAuthMode: mode => dispatch(switchAuthMode(mode)),
-    autoAuthUser: (idToken, localId) => dispatch(autoAuthUser(idToken, localId)),
+    autoAuthUser: (idToken, localId, keyDb) => dispatch(autoAuthUser(idToken, localId, keyDb)),
     logoutUser: () => dispatch(logoutUser()),
-    setUserMovies: localId => dispatch(setUserMovies(localId)),
+    updateUserMovies: movies => dispatch(addUserMovies(movies)),
+    recoveryUserMoviesList: keyDb => dispatch(recoveryUserMoviesList(keyDb))
   };
 };
   

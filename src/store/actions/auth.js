@@ -4,7 +4,8 @@ import {
   SWITCH_AUTH_MODE,
   LOGOUT_USER,
   REMOVE_USER_MOVIES,
-  SET_USER_MOVIES
+  SET_USER_MOVIES,
+  GET_USER_MOVIES
 } from '../actionsTypes';
 
 export const authenticateUser = (mode, email, password) => {
@@ -27,10 +28,43 @@ export const authenticateUser = (mode, email, password) => {
     fetch(baseUrl + apiKey, options)
       .then(res => res.json())
       .then(({ idToken, localId }) => {
-        dispatch(authenticate(idToken, localId));
-
         localStorage.setItem('idToken', idToken);
         localStorage.setItem('localId', localId);
+        
+        const secret = 'yTCcnymnwnjnjD5dES6HtAlE4qbzIoAJK1zsD8HB';
+        const baseUrl = `https://movies-app-a8b7e.firebaseio.com/movies.json?auth=${secret}`;
+
+        fetch(baseUrl)
+          .then(res => res.json())
+          .then(data => {
+            let shouldAddNewData = true;
+
+            for(const key in data){
+              if(data[key].localId === localId){
+                const list = data[key].list || null;
+                shouldAddNewData = false;
+                localStorage.setItem('keyDb', key);
+                dispatch(authenticate(idToken, localId, key, list));
+                break;
+              }
+            }
+
+            if(shouldAddNewData) {
+              const options = {
+                method: 'POST',
+                body: JSON.stringify({ localId })
+              };
+
+              fetch(baseUrl, options)
+                .then(res => res.json())
+                .then(({name}) => {
+                  localStorage.setItem('keyDb', name);
+                  dispatch(authenticate(idToken, localId, name));
+                })
+                .catch(err => console.log('[err]', err))
+            }
+          })
+          .catch(err => console.log('[err]', err))
       })
       .then(() => dispatch(toggleSubmitting(false)))
       .catch(err => {
@@ -38,7 +72,29 @@ export const authenticateUser = (mode, email, password) => {
         dispatch(toggleSubmitting(false));
       })
   }
-}
+};
+
+export const recoveryUserMoviesList = keyDb => {
+  return dispatch => {
+    const secret = 'yTCcnymnwnjnjD5dES6HtAlE4qbzIoAJK1zsD8HB';
+    const baseUrl = `https://movies-app-a8b7e.firebaseio.com/movies/${keyDb}/.json?auth=${secret}`;
+
+    dispatch(toggleSubmitting(true));
+
+    fetch(baseUrl)
+      .then(res => res.json())
+      .then(data => { if(data.list) dispatch(getUserMovies(data.list)); })
+      .then(() => dispatch(toggleSubmitting(false)))
+      .catch(err => console.log('[err]', err))
+  };
+};
+
+const getUserMovies = list => {
+  return {
+    type: GET_USER_MOVIES,
+    userMovies: list
+  };
+};
 
 const toggleSubmitting = status =>{
   return {
@@ -54,11 +110,13 @@ export const switchAuthMode = mode =>{
   };
 };
 
-export const authenticate = (idToken, localId) => {
+export const authenticate = (idToken, localId, keyDb, userMovies = null) => {
   return {
     type: AUTHENTICATE_USER,
     idToken,
-    localId
+    localId,
+    keyDb,
+    userMovies
   };
 };
 
@@ -66,6 +124,7 @@ export const logoutUser = () => {
   return dispatch => {
     localStorage.removeItem('idToken');
     localStorage.removeItem('localId');
+    localStorage.removeItem('keyDb');
     dispatch(removeUserMovies());
     dispatch(logout());
   }
@@ -77,30 +136,10 @@ const logout = () => {
   }; 
 };
 
-const addUserMovies = movies => {
+export const addUserMovies = movies => {
   return {
     type: SET_USER_MOVIES,
     movies
-  };
-};
-
-export const setUserMovies = localId => {
-  return dispatch => {
-
-    const baseUrl = 'https://movies-app-a8b7e.firebaseio.com/';
-    fetch(baseUrl + 'movies.json')
-      .then(res => res.json())
-      .then(data => {
-        for(const key in data) {
-          const user = data[key];
-
-          if(user.localId === localId) {
-            dispatch(addUserMovies(user.list))
-          }
-        }
-      })
-      .catch(err => console.log('[err]', err));
-
   };
 };
 

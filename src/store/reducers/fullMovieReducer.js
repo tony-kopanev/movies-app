@@ -3,14 +3,14 @@ import {
   GET_CREDITS_DATA,
   UNSET_MOVIE_DATA,
   GET_RECOMMENDATIONS_DATA,
-  TOGGLE_LOADING_FULL_MOVIE
+  TOGGLE_LOADING_FULL_MOVIE,
 } from '../actionsTypes';
 
 const initialState = {
   movieData: null,
   credits: null,
   recommendations: null,
-  isFetchingFullMovie: false
+  isFetchingFullMovie: false,
 };
 
 const getMovieData = (state, data) => {

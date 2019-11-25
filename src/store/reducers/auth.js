@@ -4,7 +4,8 @@ import {
   SWITCH_AUTH_MODE,
   LOGOUT_USER,
   SET_USER_MOVIES,
-  REMOVE_USER_MOVIES
+  REMOVE_USER_MOVIES,
+  GET_USER_MOVIES
 } from '../actionsTypes';
 
 const initialState = {
@@ -12,7 +13,9 @@ const initialState = {
   localId: null,
   isSubmitting: false,
   mode: 'signup',
-  userMovies: null
+  userMovies: null,
+  keyDb: null,
+  isAuthcate: false
 };
 
 const setUserMovies = (state, movies) => {
@@ -30,10 +33,13 @@ const removeUserMovies = state => {
 }
 
 const authenticateUser = (state, action) => {
+  const { idToken, localId, userMovies, keyDb } = action;
   return {
     ...state,
-    idToken: action.idToken,
-    localId: action.localId
+    idToken,
+    localId,
+    userMovies,
+    keyDb 
   };
 };
 
@@ -55,7 +61,15 @@ const logoutUser = state => {
   return {
     ...state,
     idToken: '',
-    localId: ''
+    localId: '',
+    keyDb: null 
+  };
+};
+
+const recoveryUserMoviesList = (state, userMovies) => {
+  return{
+    ...state,
+    userMovies
   };
 };
 
@@ -65,8 +79,9 @@ const reducer = (state = initialState, action) => {
     case TOGGLE_SUBMITTING: return toggleSubmitting(state, action.status);
     case SWITCH_AUTH_MODE: return switchAuthMode(state, action.mode);
     case LOGOUT_USER: return logoutUser(state);
-    case SET_USER_MOVIES: return setUserMovies(state, action.movies)
-    case REMOVE_USER_MOVIES: return removeUserMovies(state)
+    case SET_USER_MOVIES: return setUserMovies(state, action.movies);
+    case REMOVE_USER_MOVIES: return removeUserMovies(state);
+    case GET_USER_MOVIES: return recoveryUserMoviesList(state, action.userMovies);
 
     default: return state;
   }
