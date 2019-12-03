@@ -1,4 +1,4 @@
-import React, { Component, Suspense, lazy } from 'react';
+import React, { PureComponent, Suspense, lazy } from 'react';
 import { connect } from 'react-redux';
 import { Route, Switch, withRouter } from 'react-router-dom'
 
@@ -22,7 +22,7 @@ import './App.scss';
 
 const AsyncFullMovies = lazy(() => import('./components/FullMovies/FullMovies'));
 
-class App extends Component {
+class App extends PureComponent {
   state = {
     searchField: '',
     email: {
@@ -35,7 +35,6 @@ class App extends Component {
       error: false,
       message: 'The password should be minimum 6 characters length.'
     },
-    userMovies: null
   }
   
   componentDidMount() {
@@ -74,7 +73,6 @@ class App extends Component {
 
   onChangeHandler = event => {
     const {name, value} = event.target;
-    console.log('handler is work');
 
     switch(name){
       case 'email':
@@ -184,13 +182,6 @@ class App extends Component {
         }
       })
       .catch(err => console.log('[err]', err))
-  };
-
-  shouldComponentUpdate(nextProps, nextState){
-    const { isFetching, isSubmitting } = this.props;
-    return ((isFetching && !nextProps.isFetching) || 
-            (isSubmitting && !nextProps.isSubmitting) || 
-            (this.state.searchField !== nextState.searchField));
   };
 
   render() {

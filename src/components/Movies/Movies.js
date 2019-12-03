@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Spinner from '../UI/Spinner/Spinner';
 import gradients from './Movie/gradients';
 import Movie from './Movie/Movie';
+import Container from './Movie/Container';
 import './Movies.scss';
 
 const Movies = ({ moviesList, isFetching, idToken, addMoviesToList }) => {
@@ -30,7 +31,9 @@ const Movies = ({ moviesList, isFetching, idToken, addMoviesToList }) => {
     return (
       <div className = 'Movies'>
         { isFetching && <Spinner /> }
-        {movies}
+        <Container>
+          {movies}
+        </Container>
       </div>
     );
   }
