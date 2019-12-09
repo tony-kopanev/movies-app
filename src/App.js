@@ -52,7 +52,7 @@ class App extends PureComponent {
   };
 
   componentDidUpdate(prevProps) {
-    const { idToken, history } = this.props;
+    const { idToken } = this.props;
     const { email, password } = this.state;
 
     if(prevProps.idToken !== idToken){
@@ -66,10 +66,8 @@ class App extends PureComponent {
           value: ''
         }
       })
-
-      history.push('/');
     }
-  }
+  };
 
   onChangeHandler = event => {
     const {name, value} = event.target;
@@ -93,13 +91,13 @@ class App extends PureComponent {
     event.preventDefault();
 
     const { email, password } = this.state;
-    const { mode } = this.props;
+    const { mode, history } = this.props;
 
     if (email.value === '' || password.value === '' || email.error || password.error) return;
 
     const { authenticateUser } = this.props;
 
-    authenticateUser(mode, email.value, password.value)
+    authenticateUser(mode, email.value, password.value, history)
 
   };
 
@@ -194,13 +192,12 @@ class App extends PureComponent {
       isFetching,
       isSubmitting,
       keyDb,
+      history,
       userMovies,
       fetchMovies,
       switchAuthMode,
       logoutUser,
     } = this.props;
-
-    console.log('---[render]---');
     
     return (
       <div className="App">
@@ -237,6 +234,7 @@ class App extends PureComponent {
                 onSubmitHandler = {this.onSubmitHandler}
                 switchModeHandler = {switchAuthMode}
                 onBlurHandler = {this.onBlurHandler}
+                history = {history}
               />
           )} />
 
@@ -289,7 +287,7 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchMovies: request => dispatch(fetchMovies(request)),
     fetchByPopularity: () => dispatch(fetchByPopularity()),
-    authenticateUser: (mode, email, password) => dispatch(authenticateUser(mode, email, password)),
+    authenticateUser: (mode, email, password, history) => dispatch(authenticateUser(mode, email, password, history)),
     switchAuthMode: mode => dispatch(switchAuthMode(mode)),
     autoAuthUser: (idToken, localId, keyDb) => dispatch(autoAuthUser(idToken, localId, keyDb)),
     logoutUser: () => dispatch(logoutUser()),

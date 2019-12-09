@@ -8,7 +8,7 @@ import {
   GET_USER_MOVIES
 } from '../actionsTypes';
 
-export const authenticateUser = (mode, email, password) => {
+export const authenticateUser = (mode, email, password, history) => {
   return dispatch => {
     dispatch(toggleSubmitting(true));
 
@@ -66,7 +66,10 @@ export const authenticateUser = (mode, email, password) => {
           })
           .catch(err => console.log('[err]', err))
       })
-      .then(() => dispatch(toggleSubmitting(false)))
+      .then(() => {
+        dispatch(toggleSubmitting(false))
+        history.push('/');
+      })
       .catch(err => {
         console.log('[err]', err)
         dispatch(toggleSubmitting(false));

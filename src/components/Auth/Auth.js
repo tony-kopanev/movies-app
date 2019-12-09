@@ -13,62 +13,69 @@ const Auth = ({
   onChangeHandler, 
   switchModeHandler, 
   onBlurHandler,
-  isSubmitting  
+  isSubmitting,
+  history 
 }) => {
 
-    return (
-        <div className="Auth">
-            <form onSubmit = { onSubmitHandler }>
-              <h2>{ mode === 'signup' ? 'Sign Up' : 'Sign In' }</h2>
+  const idToken = localStorage.getItem('idToken');
+  if(idToken) {
+    history.push('/');
+    return null;
+  }
 
-              <label>
-                <Input
-                  classList = { email.error && 'Error' }
-                  placeholder= 'Email'
-                  name = 'email'
-                  value= {email.value}
-                  onChangeHandler = { onChangeHandler }
-                  onBlurHandler = {onBlurHandler}
+  return (
+      <div className="Auth">
+          <form onSubmit = { onSubmitHandler }>
+            <h2>{ mode === 'signup' ? 'Sign Up' : 'Sign In' }</h2>
+
+            <label>
+              <Input
+                classList = { email.error && 'Error' }
+                placeholder= 'Email'
+                name = 'email'
+                value= {email.value}
+                onChangeHandler = { onChangeHandler }
+                onBlurHandler = {onBlurHandler}
+              />
+              { email.error && <span className='ErrorMessage'>{email.message}</span> }
+            </label>
+
+            <label>
+              <Input
+                classList = { password.error && 'Error' }
+                type="password"
+                name = 'password'
+                placeholder= 'Password'
+                value= {password.value}
+                onChangeHandler = { onChangeHandler }
+                onBlurHandler = {onBlurHandler}
                 />
-                { email.error && <span className='ErrorMessage'>{email.message}</span> }
-              </label>
 
-              <label>
-                <Input
-                  classList = { password.error && 'Error' }
-                  type="password"
-                  name = 'password'
-                  placeholder= 'Password'
-                  value= {password.value}
-                  onChangeHandler = { onChangeHandler }
-                  onBlurHandler = {onBlurHandler}
-                  />
+              { password.error && <span className='ErrorMessage'>{password.message}</span> }
+            </label>
 
-                { password.error && <span className='ErrorMessage'>{password.message}</span> }
-              </label>
-
-              <Button 
-                type='submit'
-                classList = {
-                  isSubmitting ? 'Disabled' 
-                  : (email.error || password.error) && 'Alternative' 
+            <Button 
+              type='submit'
+              classList = {
+                isSubmitting ? 'Disabled' 
+                : (email.error || password.error) && 'Alternative' 
+              }
+            >
+                {
+                  isSubmitting
+                  ? 'Submitting...' 
+                  : mode === 'signup' ? 'Sign Up' : 'Sign In' 
                 }
-              >
-                  {
-                    isSubmitting
-                    ? 'Submitting...' 
-                    : mode === 'signup' ? 'Sign Up' : 'Sign In' 
-                  }
-              </Button>
+            </Button>
 
-              <span
-                className = 'ModeToggler'
-                onClick = { () => switchModeHandler(mode === 'signin' ? 'signup' : 'signin') }>
-                Switch to { mode === 'signin' ? 'Sign Up' : 'Sign In' }
-                </span>
-            </form>
-        </div>
-    );
+            <span
+              className = 'ModeToggler'
+              onClick = { () => switchModeHandler(mode === 'signin' ? 'signup' : 'signin') }>
+              Switch to { mode === 'signin' ? 'Sign Up' : 'Sign In' }
+              </span>
+          </form>
+      </div>
+  );
 };
 
 Auth.propTypes = {
@@ -79,7 +86,8 @@ Auth.propTypes = {
   switchModeHandler: PropTypes.func.isRequired,
   onBlurHandler: PropTypes.func.isRequired,
   onChangeHandler: PropTypes.func.isRequired,
-  isSubmitting: PropTypes.bool.isRequired
+  isSubmitting: PropTypes.bool.isRequired,
+  history: PropTypes.object.isRequired
 }
 
 export default Auth;
