@@ -193,7 +193,6 @@ class App extends PureComponent {
       isSubmitting,
       keyDb,
       history,
-      userMovies,
       fetchMovies,
       switchAuthMode,
       logoutUser,
@@ -217,7 +216,7 @@ class App extends PureComponent {
               <MoviesList
                 {...props}
                 localId = {localId}
-                list = {userMovies}
+                //list = {userMovies}
               />
           )} />
 
