@@ -7,7 +7,7 @@ export const getMovieData = idList => {
   const baseURL = 'https://api.themoviedb.org/3/movie/';
 
   return dispatch => {
-    const requests = idList.map(id => fetch(`${baseURL + id}?api_key=${apiKey}&language=uk-UA`));
+    const requests = idList.map(({id}) => fetch(`${baseURL + id}?api_key=${apiKey}&language=uk-UA`));
     
     Promise.all(requests)
       .then(responses => Promise.all(responses.map(r => r.json())))

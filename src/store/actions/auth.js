@@ -86,7 +86,7 @@ export const recoveryUserMoviesList = keyDb => {
 
     fetch(baseUrl)
       .then(res => res.json())
-      .then(data => { if(data.list) dispatch(getUserMovies(data.list)); })
+      .then(data => { if(data.list) dispatch(getUserMovies(Object.values(data.list))); })
       .then(() => dispatch(toggleSubmitting(false)))
       .catch(err => console.log('[err]', err))
   };

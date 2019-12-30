@@ -170,13 +170,13 @@ class App extends PureComponent {
       .then(data => {
         if(data.list){
           if(!data.list.includes(idMovie)){
-            data.list.push(idMovie);
+            data.list.push({ id: idMovie, date: Date.now() });
             setDataUserMoviesList(localId, data.list);
             updateUserMovies(data.list)
           }
         } else {
-          setDataUserMoviesList(localId, [idMovie]);
-          updateUserMovies([idMovie]);
+          setDataUserMoviesList(localId, [{ id: idMovie, date: Date.now() }]);
+          updateUserMovies([{ id: idMovie, date: Date.now() }]);
         }
       })
       .catch(err => console.log('[err]', err))

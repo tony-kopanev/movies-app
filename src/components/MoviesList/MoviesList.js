@@ -8,11 +8,6 @@ import { getMovieData } from '../../store/actions/movieListAction';
 
 class MoviesList extends Component {
 
-  // componentDidMount() {
-  //   const { userMovies } = this.props;
-  //   getMovieData(userMovies);
-  // };
-
   shouldComponentUpdate(nextProps){
     const { userMovies, listData } = this.props;
     return userMovies !== nextProps.userMovies || listData !== nextProps.listData;
@@ -24,39 +19,18 @@ class MoviesList extends Component {
     if(!prevProps.userMovies && Array.isArray(userMovies)) {
       getMovieData(userMovies);
     }
-  }
+  };
 
   render(){
-    const { listData } = this.props;
+    const { listData, userMovies } = this.props;
     
     if(!listData.length) return null;
     
     return (
-      <MoviesLisyStyled dataList = { listData } />
+      <MoviesLisyStyled dataList = { listData } userMovies = {userMovies} />
       );
   };
 };
-
-
-// const MoviesList = ({localId, list}) => {
-//   return (
-//     <div className="MoviesList">
-//         <div className="List">
-//           <h3>LocalId: <span>{localId}</span></h3>
-//           <strong>MoviesList:</strong>
-          
-//           <ol>
-//             { list && list.map((movie, i) => <li key={i}>{movie}</li> )}
-//           </ol>
-//         </div>
-//     </div>
-// );
-// }
-
-// MoviesList.propTypes = {
-//     localId: PropTypes.string,
-//     list: PropTypes.arrayOf(PropTypes.string)
-// };
 
 const mapStateToProps = state => {
   return {

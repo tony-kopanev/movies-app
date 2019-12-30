@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import styled, {createGlobalStyle } from 'styled-components';
 //import PropTypes from 'prop-types';
 
@@ -36,7 +36,7 @@ const ToolbarList = styled.div `
     font-size: 1.1rem;
     font-weight: 300;
    }
-  .sort span i { font-size: .9rem; } 
+  .sort span i { font-size: .9rem; margin-left: .2rem; } 
 `;
 
 const MovieItem = styled.div `
@@ -97,51 +97,68 @@ const MovieItem = styled.div `
       max-width: 200px;
       align-items: center;
       justify-content: space-between;
+      height: 20px; 
+
+      i { margin: 0 4px .5px 0 }
     }
   }
-
-
 `;
 
+const MoviesLisyStyled = ({ dataList, userMovies }) => {
 
-const MoviesLisyStyled = ({ dataList }) => {
+  let [ arrowDown, setArrowDown ] = useState(false);
 
-  const favotiteMovies = dataList.map(movie => {
+  for(const favItem of dataList)
+    for(const uMovie of userMovies)
+      if(favItem.id === uMovie.id) favItem.dateAdded = uMovie.date;
+
+  if(!arrowDown) dataList.sort((a, b) => a.dateAdded > b.dateAdded ? 1 : -1);
+  else dataList.sort((a, b) => a.dateAdded > b.dateAdded ? -1 : 1);
+
+  const favotiteMovies = dataList.map((movie, i) => {
     
     const { poster_path, id, title, overview } = movie;
     const srcImg = 'https://image.tmdb.org/t/p/w150_and_h225_bestv2' + poster_path;
+
+    const date = new Date(movie.dateAdded).toLocaleDateString('ru-Ru', { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+       
     return (
       <MovieItem key = {id}>
         <div className='imgBx'><img src = { srcImg } alt= { title } /></div>
         <div className='contentBx'>
           <div className='titleDate'>
             <h2>{ title }</h2>
-            <span>{ new Date(Date.now()).toLocaleDateString('ru-Ru', { hour: "2-digit", minute: "2-digit", second: "2-digit" }) }</span>
+            <span>{ date }</span>
           </div>
           <p>{ overview }</p>
           <div className='buttons'>
-            <span><i class="fa fa-heart" aria-hidden="true"></i> улюбленi</span>
-            <span><i class="fa fa-times-circle" aria-hidden="true"></i> видалити</span>
+            <span><i className="fa fa-heart" aria-hidden="true"></i> улюбленi</span>
+            <span><i className="fa fa-times-circle" aria-hidden="true"></i> видалити</span>
           </div>
         </div>
       </MovieItem>
     )});
 
-    return (
-      <Fragment>
-        <ListWarapper>
-          <ToolbarList>
-            <h1>Мої уподобання</h1>
-            <div className='sort'>
-              <span>Фільтр за: датою <i className="fa fa-chevron-down" aria-hidden="true"></i></span>
-              <span>Порядок: <i className="fa fa-arrow-up" aria-hidden="true"></i></span>
-            </div>
-          </ToolbarList>
-          { favotiteMovies }
-        </ListWarapper>
-        <GlobalStyle />
-      </Fragment>
-    );
+  return (
+    <Fragment>
+      <ListWarapper>
+        <ToolbarList>
+          <h1>Мої уподобання</h1>
+          <div className='sort'>
+            <span>Фільтр за: датою <i className="fa fa-chevron-down" aria-hidden="true"></i></span>
+            <span>Порядок: 
+              <i 
+                className={ !arrowDown ? 'fa fa-arrow-up' : 'fa fa-arrow-down' }
+                aria-hidden="true"
+                onClick = { () => setArrowDown(!arrowDown) }
+              ></i></span>
+          </div>
+        </ToolbarList>
+        { favotiteMovies }
+      </ListWarapper>
+      <GlobalStyle />
+    </Fragment>
+  );
 };
 
 export default MoviesLisyStyled;
