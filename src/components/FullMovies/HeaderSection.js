@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import Button from '../UI/Button/Button';
 import gradients from '../Movies/Movie/gradients';
+import Circular from '../UI/Circular/Circular';
 
 function randomInteger(min, max) {
   var rand = min + Math.random() * (max + 1 - min);
@@ -107,6 +108,13 @@ const FeaturedCrew = styled.div `
   h3, span { font-size: .9rem; }
 `;
 
+const RatingAndAddToList = styled.div `
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 265px;
+`;
+
 const HeaderSection = ({ movieData, crew, idToken }) => {
 
   const {
@@ -114,8 +122,12 @@ const HeaderSection = ({ movieData, crew, idToken }) => {
     title,
     overview,
     backdrop_path,
-    release_date
+    release_date,
+    vote_average
   } = movieData;
+
+  const rating = vote_average * 10;
+  const dashoffset = 164 - Math.ceil(164 * (rating / 100));
 
   const baseUrlImg  = 'https://image.tmdb.org/t/p',
         sizeImg     = '/w500',
@@ -147,7 +159,10 @@ const HeaderSection = ({ movieData, crew, idToken }) => {
           <TittleWrapper>
             <Link to={"/"}>← Повернутись на головну</Link>
             <h1>{title}<span> ({releaseYear})</span></h1>
-            { idToken && <Button clicked = { () => {} }>Add to list</Button> }
+            <RatingAndAddToList>
+              <Circular dashoffset = {dashoffset} rating = {rating} />
+              { idToken && <Button clicked = { () => {} }>Add to list</Button> }
+            </RatingAndAddToList>
             <div className='overview'>
               <h2>Огляд:</h2>
               <p>{overview}</p>
