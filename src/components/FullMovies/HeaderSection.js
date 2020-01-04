@@ -126,9 +126,6 @@ const HeaderSection = ({ movieData, crew, idToken }) => {
     vote_average
   } = movieData;
 
-  const rating = vote_average * 10;
-  const dashoffset = 164 - Math.ceil(164 * (rating / 100));
-
   const baseUrlImg  = 'https://image.tmdb.org/t/p',
         sizeImg     = '/w500',
         sizeImgBg   = '/w1400_and_h450_face';
@@ -160,7 +157,8 @@ const HeaderSection = ({ movieData, crew, idToken }) => {
             <Link to={"/"}>← Повернутись на головну</Link>
             <h1>{title}<span> ({releaseYear})</span></h1>
             <RatingAndAddToList>
-              <Circular dashoffset = {dashoffset} rating = {rating} />
+              {/* <Circular dashoffset = {dashoffset} rating = {rating} /> */}
+              <Circular voteAverage = {vote_average} modeOptions = 'full' />
               { idToken && <Button clicked = { () => {} }>Add to list</Button> }
             </RatingAndAddToList>
             <div className='overview'>

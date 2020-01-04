@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import rgba from '@bit/styled-components.polished.color.rgba';
 import { Link } from 'react-router-dom';
 
+import Circular from '../../UI/Circular/Circular';
+
 const Card = styled.div `
   position: relative;
   display: flex;
@@ -168,23 +170,52 @@ const Card = styled.div `
   }
 `;
 
-const CardMovie = ({ srcImg, title, overview, idToken, addMoviesToList, id, bgGrad, bgUrl}) => (
-  <Card bgGrad = {bgGrad} bgUrl = {bgUrl}>
-    <div className='imgBx'>
-      <img src = {srcImg} alt = {title} />
-    </div>
-    <div className='contentBx'>
-      <div className='content'>
-        <h2>{ title }</h2>
-        <p>{ overview }</p>
-        <div>
-        { idToken && <button onClick = { () => addMoviesToList(id) } type='button'>Add to list</button> }
-        {/* { idToken && <a clicked = { () => addMoviesToList(id) } href='#' >Add to list</a> } */}
-        <Link to={'/fullMovies/' + id}>Read More</Link>
+const TitleAndRating = styled.div `
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 450px;
 
+  h2 { margin-right: 55px; }
+`;
+
+const CardMovie = props => {
+  const {
+    srcImg,
+    title,
+    overview,
+    idToken,
+    addMoviesToList,
+    id,
+    bgGrad,
+    bgUrl,
+    voteAverage
+  } = props;
+
+  return (
+    <Card bgGrad = {bgGrad} bgUrl = {bgUrl}>
+      <div className='imgBx'>
+        <img src = {srcImg} alt = {title} />
+      </div>
+      <div className='contentBx'>
+        <div className='content'>
+          <TitleAndRating>
+            <h2>{ title }</h2>
+            {/* <Circular dashoffset = {dashoffset} rating = {rating} /> */}
+            <Circular voteAverage = {voteAverage} modeOptions = 'index' />
+          </TitleAndRating>
+          <p>{ overview }</p>
+          <div>
+          { idToken && <button onClick = { () => addMoviesToList(id) } type='button'>Add to list</button> }
+          {/* { idToken && <a clicked = { () => addMoviesToList(id) } href='#' >Add to list</a> } */}
+          <Link to={'/fullMovies/' + id}>Read More</Link>
+  
+          </div>
         </div>
       </div>
-    </div>
-  </Card>
-);
+    </Card>
+  );
+
+}
+
 export default CardMovie;
