@@ -1,8 +1,12 @@
-import React, { Fragment, useState } from 'react';
+//import React, { Fragment, useState, useEffect } from 'react';
 import styled, {createGlobalStyle } from 'styled-components';
+//import { useDispatch } from 'react-redux';
 //import PropTypes from 'prop-types';
 
-const GlobalStyle = createGlobalStyle`
+//import { unsetUserMovie } from '../../store/actions/auth';
+//import { unsetFromListData } from '../../store/actions/movieListAction';
+
+export const GlobalStyle = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap');
  
  body {
@@ -12,7 +16,7 @@ const GlobalStyle = createGlobalStyle`
  }
 `;
 
-const ListWarapper  = styled.div `
+export const ListWarapper  = styled.div `
   padding: 30px;
   padding-top: calc(92px + 30px);
   display: flex;
@@ -23,7 +27,7 @@ const ListWarapper  = styled.div `
   margin: 0 auto;
 `;
 
-const ToolbarList = styled.div `
+export const ToolbarList = styled.div `
   width: 100%;
   height: 70px;
   display: flex;
@@ -39,7 +43,7 @@ const ToolbarList = styled.div `
   .sort span i { font-size: .9rem; margin-left: .2rem; } 
 `;
 
-const MovieItem = styled.div `
+export const MovieItem = styled.div `
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -50,6 +54,8 @@ const MovieItem = styled.div `
   border-radius: 4px;
   box-sizing: border-box;
   margin-bottom: 35px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fbfaff;
 
   &:last-child{ margin-bottom: 0; }
 
@@ -94,71 +100,15 @@ const MovieItem = styled.div `
     .buttons{
       display: flex;
       width: 100%;
-      max-width: 200px;
+      max-width: 230px;
       align-items: center;
       justify-content: space-between;
       height: 20px; 
 
       i { margin: 0 4px .5px 0 }
+      span.black { color: black; }
+      span.pink { color: #ef47b6; font-weight: bold; }
+      span { cursor: pointer; user-select: none; }
     }
   }
 `;
-
-const MoviesLisyStyled = ({ dataList, userMovies }) => {
-
-  let [ arrowDown, setArrowDown ] = useState(false);
-
-  for(const favItem of dataList)
-    for(const uMovie of userMovies)
-      if(favItem.id === uMovie.id) favItem.dateAdded = uMovie.date;
-
-  if(!arrowDown) dataList.sort((a, b) => a.dateAdded > b.dateAdded ? 1 : -1);
-  else dataList.sort((a, b) => a.dateAdded > b.dateAdded ? -1 : 1);
-
-  const favotiteMovies = dataList.map((movie, i) => {
-    
-    const { poster_path, id, title, overview } = movie;
-    const srcImg = 'https://image.tmdb.org/t/p/w150_and_h225_bestv2' + poster_path;
-
-    const date = new Date(movie.dateAdded).toLocaleDateString('ru-Ru', { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-       
-    return (
-      <MovieItem key = {id}>
-        <div className='imgBx'><img src = { srcImg } alt= { title } /></div>
-        <div className='contentBx'>
-          <div className='titleDate'>
-            <h2>{ title }</h2>
-            <span>{ date }</span>
-          </div>
-          <p>{ overview }</p>
-          <div className='buttons'>
-            <span><i className="fa fa-heart" aria-hidden="true"></i> улюбленi</span>
-            <span><i className="fa fa-times-circle" aria-hidden="true"></i> видалити</span>
-          </div>
-        </div>
-      </MovieItem>
-    )});
-
-  return (
-    <Fragment>
-      <ListWarapper>
-        <ToolbarList>
-          <h1>Мої уподобання</h1>
-          <div className='sort'>
-            <span>Фільтр за: датою <i className="fa fa-chevron-down" aria-hidden="true"></i></span>
-            <span>Порядок: 
-              <i 
-                className={ !arrowDown ? 'fa fa-arrow-up' : 'fa fa-arrow-down' }
-                aria-hidden="true"
-                onClick = { () => setArrowDown(!arrowDown) }
-              ></i></span>
-          </div>
-        </ToolbarList>
-        { favotiteMovies }
-      </ListWarapper>
-      <GlobalStyle />
-    </Fragment>
-  );
-};
-
-export default MoviesLisyStyled;

@@ -5,7 +5,8 @@ import {
   LOGOUT_USER,
   SET_USER_MOVIES,
   REMOVE_USER_MOVIES,
-  GET_USER_MOVIES
+  GET_USER_MOVIES,
+  UNSET_USER_MOVIES
 } from '../actionsTypes';
 
 const initialState = {
@@ -80,6 +81,7 @@ const reducer = (state = initialState, action) => {
     case SWITCH_AUTH_MODE: return switchAuthMode(state, action.mode);
     case LOGOUT_USER: return logoutUser(state);
     case SET_USER_MOVIES: return setUserMovies(state, action.movies);
+    case UNSET_USER_MOVIES: return setUserMovies(state, action.movies);
     case REMOVE_USER_MOVIES: return removeUserMovies(state);
     case GET_USER_MOVIES: return recoveryUserMoviesList(state, action.userMovies);
 

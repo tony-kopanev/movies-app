@@ -1,4 +1,4 @@
-import { ADD_MOVIE_DATA_LIST } from '../actionsTypes';
+import { ADD_MOVIE_DATA_LIST, UNSET_FROM_LIST_DATA } from '../actionsTypes';
 
 export const getMovieData = idList => {
   
@@ -16,9 +16,17 @@ export const getMovieData = idList => {
   };
 };
 
+
 const addMovieDataList = data => {
   return {
     type: ADD_MOVIE_DATA_LIST,
     data
   };
+};
+
+export const unsetFromListData = data => {
+  return {
+    type: UNSET_FROM_LIST_DATA,
+    data
+  }
 };

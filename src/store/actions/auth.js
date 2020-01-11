@@ -5,7 +5,8 @@ import {
   LOGOUT_USER,
   REMOVE_USER_MOVIES,
   SET_USER_MOVIES,
-  GET_USER_MOVIES
+  GET_USER_MOVIES,
+  UNSET_USER_MOVIES
 } from '../actionsTypes';
 
 export const authenticateUser = (mode, email, password, history) => {
@@ -41,7 +42,13 @@ export const authenticateUser = (mode, email, password, history) => {
 
             for(const key in data){
               if(data[key].localId === localId){
-                const list = data[key].list || null;
+                let list = data[key].list || null;
+                
+                if(list){
+                  if(!Array.isArray(list)) list = Object.values(list);
+                  list = list.filter(movie => movie);
+                }
+
                 shouldAddNewData = false;
                 localStorage.setItem('keyDb', key);
                 dispatch(authenticate(idToken, localId, key, list));
@@ -86,8 +93,28 @@ export const recoveryUserMoviesList = keyDb => {
 
     fetch(baseUrl)
       .then(res => res.json())
-      .then(data => { if(data.list) dispatch(getUserMovies(Object.values(data.list))); })
+      .then(data => { if(data.list) dispatch(getUserMovies(Object.values(data.list).filter(movie => movie))); })
       .then(() => dispatch(toggleSubmitting(false)))
+      .catch(err => console.log('[err]', err))
+  };
+};
+
+export const unsetUserMovie = list => {
+  return dispatch => {
+    console.log('[list]', list);
+    const keyDb = localStorage.getItem('keyDb');
+    const localId = localStorage.getItem('localId');
+    const secret = 'yTCcnymnwnjnjD5dES6HtAlE4qbzIoAJK1zsD8HB';
+    const baseUrl = `https://movies-app-a8b7e.firebaseio.com/movies/${keyDb}/.json?auth=${secret}`;
+
+    const options = {
+      method: 'PATCH',
+      body: JSON.stringify({list: {...list}, localId})
+    };
+
+    fetch(baseUrl, options)
+      .then(res => res.json())
+      .then(data => {console.log('[data]', data); dispatch(unsetUserMovieAction(data.list))})
       .catch(err => console.log('[err]', err))
   };
 };
@@ -142,6 +169,14 @@ const logout = () => {
 export const addUserMovies = movies => {
   return {
     type: SET_USER_MOVIES,
+    movies
+  };
+};
+
+export const unsetUserMovieAction = movies => {
+
+  return {
+    type: UNSET_USER_MOVIES,
     movies
   };
 };

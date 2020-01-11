@@ -169,7 +169,15 @@ class App extends PureComponent {
       .then(res => res.json())
       .then(data => {
         if(data.list){
-          if(!data.list.includes(idMovie)){
+          if(!Array.isArray(data.list)) data.list = Object.values(data.list);
+          data.list = data.list.filter(movies => movies);
+          let includesMovies = false;
+
+          for(const movie of data.list) {
+            if(movie.id === idMovie) includesMovies = true;
+          }
+
+          if(!includesMovies){
             data.list.push({ id: idMovie, date: Date.now() });
             setDataUserMoviesList(localId, data.list);
             updateUserMovies(data.list)
