@@ -2,7 +2,13 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 //import PropTypes from 'prop-types';
 
-import { ListWarapper, ToolbarList, GlobalStyle, MovieItem} from './MoviesLisyStyled'
+import { 
+  ListWarapper,
+  ToolbarList,
+  GlobalStyle,
+  MovieItem,
+  SortFilter
+} from './MoviesLisyStyled';
 import { getMovieData, unsetFromListData } from '../../store/actions/movieListAction';
 import { unsetUserMovie } from '../../store/actions/auth';
 
@@ -13,6 +19,7 @@ const MoviesList = () => {
   const dispatch = useDispatch();
   let [ userMoviesLength, setUserMoviesLength ] = useState(0);
   let [ arrowDown, setArrowDown ] = useState(false);
+  let [ filterType, setFilterType ] = useState(['за датою', 'за рейтингом']);
 
   useEffect(() => {
     if(Array.isArray(userMovies) && userMovies.length !== userMoviesLength) {
@@ -63,6 +70,19 @@ const MoviesList = () => {
       i.className = "fa fa-heart";
     };
 
+    const handlerForUpfateFavorites = event => {
+      if(!event.target.closest('span')) return;
+      const span = event.target.closest('span');
+      if(!span.dataset.favorites) return;
+      
+      const id = +span.dataset.favorites;
+
+      const result = userMovies.filter(mov => mov.id !== id);
+      if(result.length === userMovies.length) return;
+
+      dispatch(unsetUserMovie(result));
+    };
+
     const favotiteMovies = listData.map(movie => {
     
       const { poster_path, id, title, overview } = movie;
@@ -88,39 +108,46 @@ const MoviesList = () => {
               >
                 <i  className="fa fa-heart" aria-hidden="true" ></i> улюбленi
               </span>
-              <span><i className="fa fa-times-circle" aria-hidden="true"></i> видалити</span>
+              <span data-favorites = {id}><i className="fa fa-times-circle" aria-hidden="true"></i> видалити</span>
             </div>
           </div>
         </MovieItem>
       )});
-
-    const handlerForUpfateFavorites = event => {
-      if(!event.target.closest('span')) return;
-      const span = event.target.closest('span');
-      if(!span.dataset.favorites) return;
-      
-      const id = +span.dataset.favorites;
-
-      const result = userMovies.filter(mov => mov.id !== id);
-      if(result.length === userMovies.length) return;
-
-      dispatch(unsetUserMovie(result))  
-    };
 
     return (
       <Fragment>
         <ListWarapper onClick = {handlerForUpfateFavorites}>
           <ToolbarList>
             <h1>Мої уподобання</h1>
-            <div className='sort'>
-              <span>Фільтр за: датою <i className="fa fa-chevron-down" aria-hidden="true"></i></span>
-              <span>Порядок: 
+            <SortFilter
+              first = { filterType[0] }
+              second = { filterType[1] }
+              setFilterType = { setFilterType } 
+              arrowDown = { arrowDown }
+              setArrowDown = { setArrowDown }
+          />
+            {/* <div className='sort'>
+              <h4>Фільтр:</h4>
+              <div className='filter-group'>
+                <div className='filter-types-group'>
+                  <div className='filter-type-item'>за датою
+                    <i className="fa fa-chevron-down" aria-hidden="true"></i>
+                  </div>
+                  <div className='filter-type-item'>за рейтингом</div>
+                </div>
+                <FilterTypesGroup first = {filterType[0]} second = {filterType[1]} setFilterType = {setFilterType} />
+                <div className='filter-type'>{ filterType[0] }
+                  <i className="fa fa-chevron-down" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div className='Order'><h4>Порядок:</h4> 
                 <i 
                   className={ !arrowDown ? 'fa fa-arrow-up' : 'fa fa-arrow-down' }
                   aria-hidden="true"
                   onClick = { () => setArrowDown(!arrowDown) }
-                ></i></span>
-            </div>
+                ></i>
+              </div>
+            </div> */}
           </ToolbarList>
           { favotiteMovies }
         </ListWarapper>
@@ -131,7 +158,6 @@ const MoviesList = () => {
     console.log('listData is not array!')
     return null;
   };
-  // if(!listData.length) return null;
 
 };
 
