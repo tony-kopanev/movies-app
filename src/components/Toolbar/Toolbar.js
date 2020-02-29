@@ -2,9 +2,7 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
-import {Header, Logo, Menu, Burger, GlobalStyle} from './styleds';
-import Input from '../UI/Input/Input';
-import Button from '../UI/Button/Button';
+import {Header, Logo, Menu, Burger, GlobalStyle, InputSerch} from './styleds';
 import './Toolbar.scss';
 
 const Toolbar = ({ search, idToken, changed, isFetching, clicked, logout }) => {
@@ -14,17 +12,11 @@ const Toolbar = ({ search, idToken, changed, isFetching, clicked, logout }) => {
     <Fragment>
       <Header>
         <Logo>Ant-Films</Logo>
-        <div className = "searchWrapper">
-          <Input 
-            placeholder = "Search..."
-            value = {search}
-            name = 'searchField'
-            onChangeHandler = {changed}
-          />
-          <Button clicked = {clicked}>
-            { isFetching ? 'Serching...' : 'Search' }
-          </Button>
-        </div>
+        <InputSerch 
+          clicked = { clicked } 
+          change = {changed} 
+          search = {search}  
+        />
         <Menu enabled = { onBurger }>  
           <ul>
             <li><NavLink to="/" exact>Зараз у кіно</NavLink></li>
@@ -44,29 +36,6 @@ const Toolbar = ({ search, idToken, changed, isFetching, clicked, logout }) => {
     </Fragment>
   )
 }
-
-
-// const Toolbar = ({ search, idToken, changed, isFetching, clicked, logout }) => (
-//   <div className="Toolbar">
-//       <Input 
-//         placeholder = "Search..."
-//         value = {search}
-//         name = 'searchField'
-//         onChangeHandler = {changed}
-//       />
-
-//       <strong>Hello, <span>{ idToken ? 'AUTHENTICATED' : 'ANONYMOUS' }</span> user!</strong>
-
-//       <div className = 'ButtonsWrapper'>
-//         { idToken && <Button clicked = {logout}>LogOut</Button> }
-//         {/* { idToken && <button onClick = {logout}>LogOut</button> } */}
-        
-//         <Button clicked = {clicked}>
-//           { isFetching ? 'Serching...' : 'Search' }
-//         </Button>
-//       </div>
-//   </div>
-// );
 
 Toolbar.propTypes = {
     search: PropTypes.string.isRequired,

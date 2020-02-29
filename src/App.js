@@ -292,7 +292,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchMovies: request => dispatch(fetchMovies(request)),
+    fetchMovies: request => request && dispatch(fetchMovies(request)),
     fetchByPopularity: () => dispatch(fetchByPopularity()),
     authenticateUser: (mode, email, password, history) => dispatch(authenticateUser(mode, email, password, history)),
     switchAuthMode: mode => dispatch(switchAuthMode(mode)),

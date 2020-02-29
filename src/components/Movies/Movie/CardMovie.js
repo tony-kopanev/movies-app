@@ -20,6 +20,16 @@ const Card = styled.div `
     justify-content: space-evenly;
     height: 420px;
     padding: 60px 0;
+
+    @media screen and (max-width: 1040px){
+
+    padding: 0;
+
+      p {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
   }
 
   &:nth-child(odd) {
@@ -102,11 +112,6 @@ const Card = styled.div `
       }
     }
 
-    h2 {
-      font-size: 30px;
-      color: #fff;
-    }
-
     p {
       margin-top: 10px;
       color: #fff;
@@ -176,7 +181,24 @@ const TitleAndRating = styled.div `
   align-items: center;
   width: 450px;
 
-  h2 { margin-right: 55px; }
+  h2 { 
+    margin-right: 55px;
+    font-size: 30px;
+    color: #fff;
+  }
+
+  @media screen and (max-width: 1040px){
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    min-height: 85px;
+    justify-content: space-between;
+
+    h2{
+      margin-right: 0;
+      font-size: 1.5rem;
+    }
+  }
 `;
 
 const CardMovie = props => {

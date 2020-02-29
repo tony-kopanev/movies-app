@@ -15,8 +15,8 @@ const updateMovies = movies => {
 };
 
 export const fetchMovies = searchField => {
+
   return dispatch => {
-    // dispatch
     const baseURL = 'https://api.themoviedb.org/3/search/movie';
     const apiKey = '52eae72c07d6cd03afd7491a82451f7b';
 
